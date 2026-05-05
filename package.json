@@ -9,7 +9,8 @@
     "@bcgov/bc-sans": "^2.1.0",
     "leaflet": "^1.9.4",
     "ol": "^10.9.0",
-    "oltb": "^3.5.0",
+    "ol-mapbox-style": "^13.4.1",
+    "oltb": "^1.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.14.1",
@@ -27,7 +28,7 @@
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.3",
     "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2",
+    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.3"
   },
   "scripts": {
