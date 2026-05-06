@@ -17,12 +17,12 @@ export const RibbonContent: React.FC<RibbonContentProps> = ({ activeTab }) => {
       return (
         <div className="ribbon-content">
           <RibbonGroup title="Clipboard">
-            <RibbonButton
+            <RibbonButtons
               icon={<ClipboardPaste />}
               label="Paste"
               onClick={() => console.log("Paste")}
             />
-            <RibbonButton
+            <RibbonButtons
               icon={<Copy />}
               label="Copy"
               onClick={() => console.log("Copy")}
@@ -30,12 +30,12 @@ export const RibbonContent: React.FC<RibbonContentProps> = ({ activeTab }) => {
           </RibbonGroup>
 
           <RibbonGroup title="Font">
-            <RibbonButton
+            <RibbonButtons
               icon={<Bold />}
               label="Bold"
               onClick={() => console.log("Bold")}
             />
-            <RibbonButton
+            <RibbonButtons
               icon={<Italic />}
               label="Italic"
               onClick={() => console.log("Italic")}
@@ -48,11 +48,11 @@ export const RibbonContent: React.FC<RibbonContentProps> = ({ activeTab }) => {
       return (
         <div className="ribbon-content">
           <RibbonGroup title="Edit Tools">
-            <RibbonButton
+            <RibbonButtons
               label="Undo"
               onClick={() => console.log("Undo")}
             />
-            <RibbonButton
+            <RibbonButtons
               label="Redo"
               onClick={() => console.log("Redo")}
             />
@@ -64,11 +64,11 @@ export const RibbonContent: React.FC<RibbonContentProps> = ({ activeTab }) => {
       return (
         <div className="ribbon-content">
           <RibbonGroup title="Display">
-            <RibbonButton
+            <RibbonButtons
               label="Zoom In"
               onClick={() => console.log("Zoom In")}
             />
-            <RibbonButton
+            <RibbonButtons
               label="Zoom Out"
               onClick={() => console.log("Zoom Out")}
             />
