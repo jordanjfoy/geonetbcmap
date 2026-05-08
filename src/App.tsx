@@ -2,6 +2,7 @@ import { Header } from './components/Header';
 import RibbonTabs from "./components/ribbon/tabs/RibbonTabs";
 import  OpenLayersMap from './components/map/OpenLayersMap';
 import './index.scss';
+import Sidebar from './components/sidebar/sidebar';
 
 
 export default function App() {
@@ -9,9 +10,12 @@ export default function App() {
     <>
       <Header />
       <RibbonTabs />
-      <main style={{ height: 'calc(100vh - 60px)' }}>
+      <div className="layout">  
+        <Sidebar />
+      <main className="main">
         <OpenLayersMap />
       </main>
+      </div>     
     </>
   );
 }

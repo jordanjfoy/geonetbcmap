@@ -1,5 +1,9 @@
 @import "@bcgov/bc-sans/css/BCSans.css";
-body { font-family: 'BCSans', sans-serif; margin: 0; background-color: #f2f2f2; };
+body { 
+  font-family: 'BCSans', sans-serif; 
+  margin: 0; 
+  background-color: #f2f2f2;
+};
 
 
 /* Ribbon */
@@ -32,4 +36,25 @@ body { font-family: 'BCSans', sans-serif; margin: 0; background-color: #f2f2f2; 
   background: #ffffff;
   color: #111827;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+
+//Side bar styling!! ----------------------------------------------
+
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+}
+
+// This is the layout for the sidebar :) 
+.layout {
+  display: flex;
+  height: calc(100vh - 60px); // adjust if needed
+}
+
+.main {
+  flex: 1;
+  display: flex;
 }
