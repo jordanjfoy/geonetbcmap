@@ -4,7 +4,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import { defaults as defaultControls } from 'ol/control';
+import { ScaleLine, defaults as defaultControls } from 'ol/control';
 import MVT from 'ol/format/MVT';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
@@ -18,7 +18,9 @@ export default function OpenLayersMap() {
 
     const map = new Map({
       target: mapRef.current,
-      controls: defaultControls(),
+      controls: defaultControls().extend([
+        new ScaleLine()
+      ]),
       layers: [
         new TileLayer({
           source: new OSM()

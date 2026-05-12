@@ -1,11 +1,20 @@
+
+import { useState } from "react";
+
 export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  function toggleSidebar() {
+    setCollapsed(!collapsed);
+  }
+
   return (
-    <aside className="sidebar">
-        <header></header>
+    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+      <button onClick={toggleSidebar}>
+        Toggle
+      </button>
+
+      <header>Menu</header>
     </aside>
   );
-}
-
-export default function toggleSidebar() {
-  document.getElementById("sidebar").classList.toggle("collapsed");
 }

@@ -39,7 +39,7 @@ body {
 }
 
 
-//Side bar styling!! ----------------------------------------------
+//Side bar styling!! ----------------------------------------------|
 
 .sidebar {
   width: 250px;
@@ -48,13 +48,20 @@ body {
   border-right: 1px solid #ccc;
 }
 
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
 // This is the layout for the sidebar :) 
 .layout {
   display: flex;
   height: calc(100vh - 60px); // adjust if needed
 }
 
+
 .main {
   flex: 1;
   display: flex;
 }
+//-----------------------------------------------------------------|
