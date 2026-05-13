@@ -14,13 +14,20 @@ export default function OpenLayersMap() {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    
     if (!mapRef.current) return;
 
+    const ScaleControl = new ScaleLine({
+        units: 'metric',
+        bar: true,
+        steps: 4,
+        text: true,
+        minWidth: 140
+    });
+    
     const map = new Map({
       target: mapRef.current,
-      controls: defaultControls().extend([
-        new ScaleLine()
-      ]),
+      controls: defaultControls().extend([ScaleControl]),
       layers: [
         new TileLayer({
           source: new OSM()
@@ -28,11 +35,12 @@ export default function OpenLayersMap() {
       ],
       view: new View({
         projection: 'EPSG:3857',
-        center: [-13700000, 6600000], // BC (EPSG:3857)
+        center: [-13800000, 7200000], // BC (EPSG:3857)
         zoom: 6
       })
     });
 
+  
     const baseLayer = new VectorTileLayer({
       visible: true,
       source:  new VectorTileSource({

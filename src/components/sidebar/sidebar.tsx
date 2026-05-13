@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 export default function Sidebar() {
@@ -10,10 +9,9 @@ export default function Sidebar() {
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <button onClick={toggleSidebar}>
-        Toggle
+      <button className='toggle-button' onClick={toggleSidebar}>
+        T
       </button>
-
       <header>Menu</header>
     </aside>
   );

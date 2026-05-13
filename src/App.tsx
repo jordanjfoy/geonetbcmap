@@ -11,10 +11,10 @@ export default function App() {
       <Header />
       <RibbonTabs />
       <div className="layout">  
-        <Sidebar />
-      <main className="map-container">
-        <OpenLayersMap />
-      </main>
+          <Sidebar />
+          <main className="map-container">
+            <OpenLayersMap />
+          </main>
       </div>     
     </>
   );

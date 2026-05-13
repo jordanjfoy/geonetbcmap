@@ -13,7 +13,7 @@ html, body, #root {
 /* Map container */
 
 .map-container {
-  position: fixed;  
+  position: relative;  
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -21,6 +21,15 @@ html, body, #root {
   display: flex;
 }
 
+
+.ol-control {
+  z-index: 1000;
+}
+
+.ol-scale-line {
+  bottom: 10px;
+  left: 10px;
+}
 
 
 /* Ribbon */
@@ -59,10 +68,13 @@ html, body, #root {
 //Side bar styling!! ----------------------------------------------|
 
 .sidebar {
+  position: relative;
+  overflow: visible;
   width: 250px;
   background-color: #f4f4f4;
   padding: 1rem;
   border-right: 1px solid #ccc;
+  flex-shrink: 0;
 }
 
 
@@ -75,5 +87,24 @@ html, body, #root {
   display: flex;
   height: calc(100vh - 60px); // adjust if needed
 }
+
+// Toggle button styling 
+.toggle-button {
+  position: absolute;
+  top: 50%;
+  right: -15px;   /* pushes it outside edge */
+  
+  width: 30px;
+  height: 30px;
+
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+
+  z-index: 500; /* above map */
+}
+
+
 
 //-----------------------------------------------------------------|
