@@ -12,7 +12,7 @@ export default function App() {
       <RibbonTabs />
       <div className="layout">  
         <Sidebar />
-      <main className="main">
+      <main className="map-container">
         <OpenLayersMap />
       </main>
       </div>     
