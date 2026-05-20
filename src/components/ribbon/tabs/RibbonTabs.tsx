@@ -1,9 +1,15 @@
 
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UIContext } from "../../interface/UIContext";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
   const [action, setAction] = useState<string | null>(null);
+
+  const context = useContext(UIContext);
+  if (!context) return null;
+
+  const { setSidebarMode } = useContext(UIContext)!;
 
   return (
     <>
@@ -34,6 +40,13 @@ export default function RibbonTabs() {
             <button onClick={() => setAction("Pan")}>Pan</button>
             <button onClick={() => setAction("Previous Extent")}>Previous Extent</button>
             <button onClick={() => setAction("Next Extent")}>Next Extent</button>
+            <button onClick={() => { 
+              {setAction("Layers")};  
+              {setSidebarMode("Layers")}
+              }}>
+              Layers
+            </button>
+
           </div>
         )}
 

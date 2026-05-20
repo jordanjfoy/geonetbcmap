@@ -8,7 +8,6 @@ html, body, #root {
   margin: 0;
   padding: 0;
   margin: 0; 
-  overflow: hidden;
 };
 
 /* Map container */
@@ -22,6 +21,17 @@ html, body, #root {
   min-height: 0;
   display: flex;
 }
+
+.map-switcher {
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  z-index: 1000;
+  background: white ;
+  padding: 6px;
+}
+
+
 
 /* Ribbon */
 .ribbon {
