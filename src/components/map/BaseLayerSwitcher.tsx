@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import MapContext from './MapContext';
+import MapContext from '../../context/MapContext';
 
 export default function BaseLayerSwitcher() {
   const context = useContext(MapContext);

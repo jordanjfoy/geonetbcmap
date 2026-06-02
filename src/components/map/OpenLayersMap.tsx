@@ -21,7 +21,7 @@ import { XYZ } from 'ol/source';
 import MVT from 'ol/format/MVT';
 // Styling helpers
 import olms from 'ol-mapbox-style';
-import MapContext from './MapContext';
+import MapContext from '../../context/MapContext';
 import { applyStyle } from 'ol-mapbox-style';
 
 

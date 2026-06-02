@@ -3,7 +3,7 @@ import RibbonTabs from "./components/ribbon/tabs/RibbonTabs";
 import  OpenLayersMap from './components/map/OpenLayersMap';
 import './index.scss';
 import Sidebar from './components/sidebar/sidebar';
-import { UIProvider } from './components/interface/UIContext';
+import { UIProvider } from './context/UIContext';
 
 
 export default function App() {

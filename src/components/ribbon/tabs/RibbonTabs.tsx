@@ -1,6 +1,6 @@
 
 import { useContext, useState } from "react";
-import { UIContext } from "../../interface/UIContext";
+import { UIContext } from "../../../context/UIContext";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
