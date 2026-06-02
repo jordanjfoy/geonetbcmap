@@ -1,9 +1,14 @@
 /*all AI generated */
 import { createContext } from 'react';
+import Map from 'ol/Map';
 
 // 1. Define the shape of the context (what you are sharing)
 type MapContextType = {
   baseLayersRef: React.RefObject<any>;
+  activeTool: string | null;
+  map: Map | null;
+  setActiveTool: (tool: string | null) => void;
+
 };
 
 // 2. Create the context

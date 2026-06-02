@@ -1,27 +1,38 @@
 
 // React
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 // OpenLayers core styling
 import 'ol/ol.css';
+
 // Core map
 import Map from 'ol/Map';
 import View from 'ol/View';
+
+// Context 
+import MapContext from '../../context/MapContext';
+import MapInteractions from './MapInteractions';
+
 // Controls
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import BaseLayerSwitcher from './BaseLayerSwitcher';
+
 // Layers
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
+
 // Sources
 import OSM from 'ol/source/OSM';
 import VectorTileSource from 'ol/source/VectorTile';
 import { XYZ } from 'ol/source';
+
 // Formats
 import MVT from 'ol/format/MVT';
+
 // Styling helpers
 import olms from 'ol-mapbox-style';
-import MapContext from '../../context/MapContext';
+
 import { applyStyle } from 'ol-mapbox-style';
 
 
@@ -49,8 +60,8 @@ function createBCVectorLayer() {
 export default function OpenLayersMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const baseLayersRef = useRef<LayerGroup>(null);
-
-
+  const [activeTool, setActiveTool] = useState<string | null>(null);
+  const [mapInstance, setMapInstance] = useState<Map | null>(null);
 
   useEffect(() => {
     
@@ -110,14 +121,14 @@ export default function OpenLayersMap() {
         zoom: 6
       })
     });
-    
+    setMapInstance(map);
     return () => map.setTarget(undefined);
   }, []);
 
   /*return <div ref={mapRef} style={{ width: '100%', height: '100%' }} */
 
   return (
-    <MapContext.Provider value={{ baseLayersRef }}>
+    <MapContext.Provider value={{baseLayersRef, map: mapInstance, activeTool, setActiveTool }}>
       <div className="map-container">
 
         {/* 👇 THIS is where OpenLayers renders */}
@@ -127,7 +138,7 @@ export default function OpenLayersMap() {
         <div className="map-switcher">
           <BaseLayerSwitcher />
         </div>
-
+        <MapInteractions />
       </div>
     </MapContext.Provider>
   );

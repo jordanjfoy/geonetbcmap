@@ -1,6 +1,7 @@
 
 import { useContext, useState } from "react";
 import { UIContext } from "../../../context/UIContext";
+import MapContext from "../../../context/MapContext";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
@@ -10,6 +11,10 @@ export default function RibbonTabs() {
   if (!context) return null;
 
   const { setSidebarMode } = useContext(UIContext)!;
+
+  /* getting setActive Tool from MapContext */
+  const mapCtx = useContext(MapContext);
+  const { setActiveTool } = mapCtx || {};
 
   return (
     <>
@@ -52,7 +57,13 @@ export default function RibbonTabs() {
 
         {tab === "Markup" && (
           <div className="ribbon-group">
-            <button onClick={() => setAction("DropdownDraw")}>Draw</button>
+            <button onClick={() => {
+              setAction("Draw");
+              setActiveTool?.('draw');
+            }}>
+              Draw
+            </button>
+            
             <button onClick={() => setAction("Edit")}>Edit</button>
             <button onClick={() => setAction("Erase")}>Delete</button>
             <button onClick={() => setAction("Clear")}>Delete</button>
