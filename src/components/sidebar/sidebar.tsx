@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UIContext } from "../interface/UIContext";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { sidebarMode } = useContext(UIContext)!;
+
 
   function toggleSidebar() {
     setCollapsed(!collapsed);
@@ -13,6 +16,9 @@ export default function Sidebar() {
         T
       </button>
       <header>Menu</header>
+      <div className="sidebar-content">
+        {sidebarMode === "layers" && <div> Layers Panel</div>}
+      </div>
     </aside>
   );
 }
