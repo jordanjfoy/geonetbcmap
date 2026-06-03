@@ -4,21 +4,24 @@ import  OpenLayersMap from './components/map/OpenLayersMap';
 import './index.scss';
 import Sidebar from './components/sidebar/sidebar';
 import { UIProvider } from './context/UIContext';
+import { MapProvider } from './context/MapProvider';
 
 
 export default function App() {
   return (
     <>
       <Header />
-      <UIProvider>
-        <RibbonTabs />
-        <div className="layout"> 
-          <Sidebar />
-          <main className="map-container">
-            <OpenLayersMap />
-          </main> 
-        </div>
-      </UIProvider>         
+      <MapProvider>
+        <UIProvider>
+          <RibbonTabs />
+          <div className="layout">
+            <Sidebar />
+            <main className="map-container">
+              <OpenLayersMap />
+            </main>
+          </div>
+        </UIProvider>
+      </MapProvider>        
     </>
   );
 }

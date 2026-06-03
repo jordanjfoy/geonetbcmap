@@ -1,4 +1,3 @@
-
 // React
 import { useEffect, useRef, useState } from 'react';
 
@@ -12,6 +11,7 @@ import View from 'ol/View';
 // Context 
 import MapContext from '../../context/MapContext';
 import MapInteractions from './MapInteractions';
+import { useContext } from 'react';
 
 // Controls
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
@@ -60,13 +60,16 @@ function createBCVectorLayer() {
 export default function OpenLayersMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const baseLayersRef = useRef<LayerGroup>(null);
-  const [activeTool, setActiveTool] = useState<string | null>(null);
-  const [mapInstance, setMapInstance] = useState<Map | null>(null);
+  
+  // ← GET values from context, don't create new state
+  const ctx = useContext(MapContext);
+  if (!ctx) return null;
+  
+  const { setMapInstance } = ctx;
 
   useEffect(() => {
-    
     if (!mapRef.current) return;
-
+    
     const ScaleControl = new ScaleLine({
         units: 'metric',
         bar: true,
@@ -121,26 +124,20 @@ export default function OpenLayersMap() {
         zoom: 6
       })
     });
-    setMapInstance(map);
+    
+    setMapInstance(map);  // ← Pass map up to context
+    baseLayersRef.current = baseLayers;
+    
     return () => map.setTarget(undefined);
-  }, []);
-
-  /*return <div ref={mapRef} style={{ width: '100%', height: '100%' }} */
+  }, [setMapInstance]);
 
   return (
-    <MapContext.Provider value={{baseLayersRef, map: mapInstance, activeTool, setActiveTool }}>
-      <div className="map-container">
-
-        {/* 👇 THIS is where OpenLayers renders */}
-        <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
-
-        {/* 👇 This sits on top */}
-        <div className="map-switcher">
-          <BaseLayerSwitcher />
-        </div>
-        <MapInteractions />
+    <div className="map-container">
+      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+      <div className="map-switcher">
+        <BaseLayerSwitcher />
       </div>
-    </MapContext.Provider>
+      <MapInteractions />
+    </div>
   );
-
 }

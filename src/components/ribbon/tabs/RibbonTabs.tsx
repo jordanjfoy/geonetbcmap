@@ -1,7 +1,7 @@
-
 import { useContext, useState } from "react";
 import { UIContext } from "../../../context/UIContext";
 import MapContext from "../../../context/MapContext";
+import { DrawDropdown } from "../content/DrawDropdown";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
@@ -57,12 +57,7 @@ export default function RibbonTabs() {
 
         {tab === "Markup" && (
           <div className="ribbon-group">
-            <button onClick={() => {
-              setAction("Draw");
-              setActiveTool?.('draw');
-            }}>
-              Draw
-            </button>
+            <DrawDropdown onSelect={(type) => setAction(`Draw: ${type}`)} />
             
             <button onClick={() => setAction("Edit")}>Edit</button>
             <button onClick={() => setAction("Erase")}>Delete</button>

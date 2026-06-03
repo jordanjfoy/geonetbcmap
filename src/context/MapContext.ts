@@ -8,6 +8,9 @@ type MapContextType = {
   activeTool: string | null;
   map: Map | null;
   setActiveTool: (tool: string | null) => void;
+  setMapInstance: (map: Map | null) => void;
+  drawType: string | null;  
+  setDrawType: (type: string | null) => void;
 
 };
 
