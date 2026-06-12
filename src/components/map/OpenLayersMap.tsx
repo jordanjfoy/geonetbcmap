@@ -59,13 +59,11 @@ function createBCVectorLayer() {
 
 export default function OpenLayersMap() {
   const mapRef = useRef<HTMLDivElement>(null);
-  const baseLayersRef = useRef<LayerGroup>(null);
-  
-  // ← GET values from context, don't create new state
+    // ← GET  values from context, don't create new state
   const ctx = useContext(MapContext);
   if (!ctx) return null;
   
-  const { setMapInstance } = ctx;
+ const { baseLayersRef, setMapInstance } = ctx;
 
   useEffect(() => {
     if (!mapRef.current) return;
