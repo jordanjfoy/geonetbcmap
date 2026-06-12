@@ -11,6 +11,7 @@ type MapContextType = {
   setMapInstance: (map: Map | null) => void;
   drawType: string | null;  
   setDrawType: (type: string | null) => void;
+  setExtent: (extent: number[]) => void;
 
 };
 

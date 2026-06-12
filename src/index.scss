@@ -5,9 +5,9 @@ html, body, #root {
   margin: 0; 
   background-color: #f2f2f2;  
   height: 100%;
-  margin: 0;
   padding: 0;
-  margin: 0; 
+  display: flex;
+  flex-direction: column;
 };
 
 /* Map container */
@@ -86,7 +86,8 @@ html, body, #root {
 // This is the layout for the sidebar :) 
 .layout {
   display: flex;
-  height: calc(100vh - 60px); // adjust if needed
+  flex: 1;           
+  min-height: 0; 
 }
 
 // Toggle button styling 

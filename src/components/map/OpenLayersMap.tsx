@@ -107,6 +107,12 @@ export default function OpenLayersMap() {
       ]
     });
 
+    // -- Original View 
+    const initialView = {
+      center: [-13800000, 7200000],
+      zoom: 6
+    };
+
 
     // --- Map ---
     const map = new Map({
@@ -118,11 +124,12 @@ export default function OpenLayersMap() {
       ],
       view: new View({
         projection: 'EPSG:3857',
-        center: [-13800000, 7200000],
-        zoom: 6
+        center: initialView.center,
+        zoom: initialView.zoom
       })
     });
-    
+
+
     setMapInstance(map);  // ← Pass map up to context
     baseLayersRef.current = baseLayers;
     
