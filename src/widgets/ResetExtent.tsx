@@ -1,3 +1,5 @@
+/* This will need to be removed eventually!*/ 
+
 import { useContext } from 'react';
 import MapContext from '../context/MapContext';
 
