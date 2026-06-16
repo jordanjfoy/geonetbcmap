@@ -35,6 +35,7 @@ import MVT from 'ol/format/MVT';
 import olms from 'ol-mapbox-style';
 
 import { applyStyle } from 'ol-mapbox-style';
+import VectorLayersComponent from '../layers/VectorLayersComponent';
 
 
 /* helper function to create BC Vector layer with style applied */
@@ -65,11 +66,7 @@ export default function OpenLayersMap() {
   
 
     // --- Overlay Layers ---
-    const overlays = new LayerGroup({
-      layers: [
-        // add your data layers here later
-      ]
-    });
+    const overlays = VectorLayersComponent();
 
     // -- Original View 
     const initialView = {
