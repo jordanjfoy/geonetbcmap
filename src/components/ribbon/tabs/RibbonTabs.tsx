@@ -40,9 +40,9 @@ export default function RibbonTabs() {
         {tab === "Navigation" && (
           <div className="ribbon-group">
             <button onClick={() => mapCtx?.setExtent([-14000000, 6800000, -13500000, 7500000])}>Full Extent</button>
-            <button onClick={() => setAction("Zoom In")}>Zoom In</button>
-            <button onClick={() => setAction("Zoom Out")}>Zoom Out</button>
-            <button onClick={() => setAction("Pan")}>Pan</button>
+            <button onClick={() => mapCtx?.zoomIn()}>Zoom In</button>
+            <button onClick={() => mapCtx?.zoomOut()}>Zoom Out</button>
+            <button onClick={() => mapCtx?.pan()}>Pan</button>
             <button onClick={() => setAction("Previous Extent")}>Previous Extent</button>
             <button onClick={() => setAction("Next Extent")}>Next Extent</button>
             <button onClick={() => { 

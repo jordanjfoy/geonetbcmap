@@ -12,6 +12,11 @@ type MapContextType = {
   drawType: string | null;  
   setDrawType: (type: string | null) => void;
   setExtent: (extent: number[]) => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  pan: () => void;
+  overlayElement: (tool: HTMLElement | undefined) => HTMLElement;
+  
 
 };
 
