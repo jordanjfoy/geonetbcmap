@@ -13,16 +13,44 @@ import MapContext from '../../context/MapContext';
 import MapInteractions from './MapInteractions';
 import { useContext } from 'react';
 
+
 // Controls
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import BaseLayerSwitcher from './BaseLayerSwitcher';
 import {Select} from "ol/interaction";
 
+
+// Layers etc. 
 import BaseLayersComponent from '../layers/BaseLayersComponent';
 import VectorLayersComponent from '../layers/VectorLayersComponent';
+import VectorLayer from 'ol/layer/Vector';
 
 /* helper function to create BC Vector layer with style applied */
 
+function flattenVectorLayers(layers: any): VectorLayer<any>[] {
+  // layers might be a LayerGroup
+  const out: VectorLayer<any>[] = [];
+
+  const visit = (layer: any) => {
+    if (!layer) return;
+
+    // LayerGroup in OL has getLayers()
+    if (typeof layer.getLayers === "function") {
+      const groupLayers = layer.getLayers().getArray();
+      groupLayers.forEach(visit);
+      return;
+    }
+
+    // VectorLayer has getSource() and usually is instance of VectorLayer
+    // Safer check: presence of a vector-like source
+    if (typeof layer.getSource === "function" && layer.getSource()) {
+      out.push(layer as VectorLayer<any>);
+    }
+  };
+
+  visit(layers);
+  return out;
+}
 
 export default function OpenLayersMap() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -51,6 +79,8 @@ export default function OpenLayersMap() {
     // --- Overlay Layers ---
     const overlays = VectorLayersComponent();
 
+    const vectors = flattenVectorLayers(overlays)
+
     // -- Original View 
     const initialView = {
       center: [-13800000, 7200000],
@@ -58,26 +88,34 @@ export default function OpenLayersMap() {
     };
 
     // --- click -> select feature(s) ---
+    useEffect(() => {
+    if (!overlays) return;
+    const map = mapRef.current;
+    if (!map) return;
+
     const select = new Select({
-      layers: [overlays],   // only select from this layer
+      layers: vectors, // only select from this layer
       hitTolerance: 5,
-      // optionally: condition: click only (default is click)
     });
 
-    select.on("select", (e) => {
-      // e.selected is an array of selected features
-      const features = e.selected;
-      if (!features.length) return;
+    const onSelect = (e: any) => {
+      const feature = e.selected?.[0];
+      if (!feature) return;
 
-      const feature = features[0];
-      const props = feature.getProperties(); // includes geometry under "geometry" key
-
-      console.log("clicked properties:", props);
-
-      // common pattern: remove geometry key before displaying
+      const props = feature.getProperties();
       delete props.geometry;
-    })
-    
+      console.log("clicked properties:", props);
+    };
+
+    select.on("select", onSelect);
+    map.addInteraction(select);
+
+    return () => {
+      select.un("select", onSelect);
+      map.removeInteraction(select);
+    };
+  }, [overlays]);
+
 
     // --- Map ---
     const map = new Map({
