@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from 'react';
-import MapContext from '../../context/MapContext';
-import { UIContext } from '../../context/UIContext';
+import MapContext from '../context/MapContext';
+import { UIContext } from '../context/UIContext';
 import { Overlay } from 'ol';
 import '../../../styles/popup.scss';
 

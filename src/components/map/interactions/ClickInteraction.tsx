@@ -1,33 +1,35 @@
+
+
 import { useEffect, useContext } from 'react';
 import MapContext from '../../../context/MapContext';
 import { UIContext } from '../../../context/UIContext';
+
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import MapBrowserEvent from 'ol/MapBrowserEvent';
 import { transform } from 'ol/proj';
+
 
 export default function ClickInteraction() {
   const mapCtx = useContext(MapContext);
   const uiCtx = useContext(UIContext);
 
-  if (!mapCtx || !uiCtx || !mapCtx.map) return null;
-
   useEffect(() => {
+    if (!mapCtx?.map || !uiCtx) return;
+
     const map = mapCtx.map;
-    if (!map) return;
 
-    const handleMapClick = (evt: any) => {
-      let clickedFeature = null;
-      let clickedCoordinates = evt.coordinate;
+    const handleMapClick = (evt: MapBrowserEvent) => {
+      const clickedCoordinates = evt.coordinate;
 
-      // Get all features at the clicked pixel
-      map.forEachFeatureAtPixel(evt.pixel, (feature) => {
-        if (!clickedFeature) {
-          clickedFeature = feature;
-        }
-      });
+      const clickedFeature =
+        map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+          return feature as Feature<Geometry>;
+        }) || null;
 
       if (clickedFeature) {
         const properties = clickedFeature.getProperties();
-        
-        // Convert from map projection to WGS84 for display if needed
+
         const wgs84Coords = transform(
           clickedCoordinates,
           'EPSG:3857',
@@ -36,12 +38,12 @@ export default function ClickInteraction() {
 
         uiCtx.setPopupData({
           properties,
-          coordinates: clickedCoordinates,
-          featureId: clickedFeature.getId(),
+          coordinates: wgs84Coords as [number, number],
+          featureId: clickedFeature.getId() ?? undefined,
         });
+
         uiCtx.setShowPopup(true);
       } else {
-        // Close popup if clicking on empty area
         uiCtx.setShowPopup(false);
       }
     };
@@ -51,7 +53,8 @@ export default function ClickInteraction() {
     return () => {
       map.un('click', handleMapClick);
     };
-  }, [mapCtx.map, uiCtx]);
+  }, [mapCtx?.map, uiCtx?.setPopupData, uiCtx?.setShowPopup]);
 
   return null;
 }
+

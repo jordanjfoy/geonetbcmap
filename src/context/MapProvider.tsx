@@ -8,6 +8,7 @@ export function MapProvider({ children }: { children: ReactNode }) {
   const [mapInstance, setMapInstance] = useState<Map | null>(null);
   const [drawType, setDrawType] = useState<string | null>(null);  // ← Add this
   const baseLayersRef = useRef<LayerGroup>(null);
+  const [overlayElement, setOverlayElement] = useState<HTMLElement | null>(null);
   const setExtent = (extent: number[]) => {
     if (mapInstance) {
       mapInstance.getView().fit(extent, { duration: 1000 });
@@ -46,12 +47,14 @@ export function MapProvider({ children }: { children: ReactNode }) {
       activeTool, 
       setActiveTool, 
       drawType, 
+      overlayElement,
+      setOverlayElement,
       setDrawType, 
       setMapInstance,
       setExtent,
       zoomIn,
       zoomOut,
-      pan
+      pan,
       }}>
       {children}
     </MapContext.Provider>

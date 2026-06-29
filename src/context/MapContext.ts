@@ -7,6 +7,7 @@ type MapContextType = {
   baseLayersRef: React.RefObject<any>;
   activeTool: string | null;
   map: Map | null;
+  
   setActiveTool: (tool: string | null) => void;
   setMapInstance: (map: Map | null) => void;
   drawType: string | null;  
@@ -15,7 +16,10 @@ type MapContextType = {
   zoomIn: () => void;
   zoomOut: () => void;
   pan: () => void;
-  overlayElement: (tool: HTMLElement | undefined) => HTMLElement;
+  overlayElement: HTMLElement | null;
+  setOverlayElement: React.Dispatch<
+    React.SetStateAction<HTMLElement | null>
+  >;
   
 
 };

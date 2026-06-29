@@ -9,9 +9,9 @@ export default function PopUps() {
     if (!ctx || !ctx.map) return null;
     
     /*creates an overlayElement which */
-    const overlayElement = document.getElementById('popup');
+    const overlayElement = document.getElementById('popup') ?? undefined;
     
-    
+
     const overlay = new Overlay({
     element: overlayElement,
     positioning: 'bottom-center', // Controls the positioning of the overlay
