@@ -1,11 +1,9 @@
 import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import Style from 'ol/style/Style';
-import Fill from 'ol/style/Fill';
-import CircleStyle from 'ol/style/Circle';
 import { WFS, GeoJSON } from 'ol/format';
 import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
+import { styleFunction } from './StyleComponent'; 
 
 export default function VecLayersComponent(): LayerGroup{
   const vectorSource = new VectorSource({
@@ -23,21 +21,20 @@ export default function VecLayersComponent(): LayerGroup{
     strategy: bboxStrategy,
   });
 
-
-  const vecLayers = new LayerGroup({
+  const vecLayers:LayerGroup = new LayerGroup({
     layers: [
       new VectorLayer({
         source: vectorSource,
-        style: new Style({
-          image: new CircleStyle({
-          radius: 4,
-          fill: new Fill({ color: 'red' }),
-            })
-        }),
+        style: styleFunction,
+        minZoom: 12, 
+        maxZoom: 20
       }),
     ],
   });
 
   return vecLayers;
 }
+
+
+
 

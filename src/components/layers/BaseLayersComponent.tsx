@@ -8,6 +8,8 @@ import OSM from 'ol/source/OSM';
 import { XYZ } from 'ol/source';
 import LayerGroup from 'ol/layer/Group';
 
+
+
 function createBCVectorLayer() {
   const layer = new VectorTileLayer({
     visible: false,

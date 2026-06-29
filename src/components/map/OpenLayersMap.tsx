@@ -16,27 +16,10 @@ import { useContext } from 'react';
 // Controls
 import { ScaleLine, defaults as defaultControls } from 'ol/control'
 import BaseLayerSwitcher from './BaseLayerSwitcher';
+import {Select} from "ol/interaction";
 
-// Layers
-import LayerGroup from 'ol/layer/Group';
-import TileLayer from 'ol/layer/Tile';
-import VectorTileLayer from 'ol/layer/VectorTile';
 import BaseLayersComponent from '../layers/BaseLayersComponent';
-
-// Sources
-import OSM from 'ol/source/OSM';
-import VectorTileSource from 'ol/source/VectorTile';
-import { XYZ } from 'ol/source';
-
-// Formats
-import MVT from 'ol/format/MVT';
-
-// Styling helpers
-import olms from 'ol-mapbox-style';
-
-import { applyStyle } from 'ol-mapbox-style';
 import VectorLayersComponent from '../layers/VectorLayersComponent';
-
 
 /* helper function to create BC Vector layer with style applied */
 
@@ -74,6 +57,27 @@ export default function OpenLayersMap() {
       zoom: 6
     };
 
+    // --- click -> select feature(s) ---
+    const select = new Select({
+      layers: [overlays],   // only select from this layer
+      hitTolerance: 5,
+      // optionally: condition: click only (default is click)
+    });
+
+    select.on("select", (e) => {
+      // e.selected is an array of selected features
+      const features = e.selected;
+      if (!features.length) return;
+
+      const feature = features[0];
+      const props = feature.getProperties(); // includes geometry under "geometry" key
+
+      console.log("clicked properties:", props);
+
+      // common pattern: remove geometry key before displaying
+      delete props.geometry;
+    })
+    
 
     // --- Map ---
     const map = new Map({
