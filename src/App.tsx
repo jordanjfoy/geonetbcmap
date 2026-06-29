@@ -5,6 +5,7 @@ import './index.scss';
 import Sidebar from './components/sidebar/sidebar';
 import { UIProvider } from './context/UIContext';
 import { MapProvider } from './context/MapProvider';
+import Legend from './interface/Legend'
 
 
 export default function App() {
@@ -21,7 +22,8 @@ export default function App() {
             </main>
           </div>
         </UIProvider>
-      </MapProvider>        
+      </MapProvider>
+      <Legend />       
     </>
   );
 }
