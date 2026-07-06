@@ -134,4 +134,4 @@ xport function createSymbol(symbol: { color: string; shape: string; size: number
         fill: new Fill({ color: symbol.color }),
       });
   }
-}
+}*/
