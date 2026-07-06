@@ -9,7 +9,7 @@ import { SYMBOLS } from '../../styles/styles'
 const styleCache: Record<number, Style> = {};
 
 
-function createSymbol(symbolId: number) {
+export const createSymbol = (symbolId: number) => {
   const symbol = SYMBOLS.find(s => s.id === symbolId);
 
   if (!symbol) {
@@ -21,14 +21,14 @@ function createSymbol(symbolId: number) {
     });
   }
 
-  const { color, shape } = symbol;
+  const { color, shape, size } = symbol;
 
   switch (shape) {
 
     case 'diamond':
       return new RegularShape({
         points: 4,
-        radius: 7,
+        radius: size / 2,
         angle: Math.PI / 4,
         fill: new Fill({ color }),
         stroke: new Stroke({ color: '#000', width: 1 })
@@ -37,7 +37,7 @@ function createSymbol(symbolId: number) {
     case 'triangle':
       return new RegularShape({
         points: 3,
-        radius: 7,
+        radius: size / 2,
         fill: new Fill({ color }),
         stroke: new Stroke({ color: '#000', width: 1 })
       });
@@ -45,14 +45,14 @@ function createSymbol(symbolId: number) {
     case 'cross':
       return new RegularShape({
         points: 4,
-        radius: 8,
+        radius: size / 2,
         angle: 0,
         stroke: new Stroke({ color, width: 2 })
       });
 
     default:
       return new CircleStyle({
-        radius: 5,
+        radius: size / 2,
         fill: new Fill({ color }),
         stroke: new Stroke({ color: '#000', width: 1 })
       });
@@ -72,3 +72,66 @@ export const styleFunction = (feature: any) => {
 
   return styleCache[symbolId];
 };
+
+
+/*
+xport function createSymbol(symbol: { color: string; shape: string; size: number }) {
+  switch (symbol.shape) {
+    case 'circle':
+      return new CircleStyle({
+        radius: symbol.size / 2,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'square':
+      return new RegularShape({
+        points: 4,
+        radius: symbol.size / 2,
+        angle: Math.PI / 4,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'diamond':
+      return new RegularShape({
+        points: 4,
+        radius: symbol.size / 2,
+        angle: 0,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'triangle':
+      return new RegularShape({
+        points: 3,
+        radius: symbol.size / 2,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'pentagon':
+      return new RegularShape({
+        points: 5,
+        radius: symbol.size / 2,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'hexagon':
+      return new RegularShape({
+        points: 6,
+        radius: symbol.size / 2,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    case 'star':
+      return new RegularShape({
+        points: 5,
+        radius: symbol.size / 2,
+        radius2: symbol.size / 4,
+        fill: new Fill({ color: symbol.color }),
+      });
+
+    default:
+      return new CircleStyle({
+        radius: symbol.size / 2,
+        fill: new Fill({ color: symbol.color }),
+      });
+  }
+}

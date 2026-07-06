@@ -1,6 +1,6 @@
 import { SYMBOLS } from '../../styles/styles';
 import  '../../styles/index.scss';
-
+import { styleFunction } from '../layers/Style';
 
 
 export default function Legend() {
@@ -11,14 +11,7 @@ export default function Legend() {
       {SYMBOLS.map((item) => (
         <div key={item.id} className="legend-row">
           <span
-            style={{
-              width: 12,
-              height: 12,
-              backgroundColor: item.color,
-              borderRadius: item.shape === 'circle' ? '50%' : '0',
-              marginRight: 6,
-              display: 'inline-block'
-            }}
+            style={styleFunction: ({ get: () => item.id }).getImage().getFill().getColor()}
           />
           {item.label}
         </div>
