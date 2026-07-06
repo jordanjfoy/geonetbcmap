@@ -5,7 +5,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import { Select } from "ol/interaction";
 import { ScaleLine, defaults as defaultControls } from "ol/control";
-import BaseLayerSwitcher from './BaseLayerSwitcher';
+import BaseLayerSwitcher from '../layers/BaseLayerSwitcher';
 
 import { useState } from "react";
 import MapInteractions from './MapInteractions';

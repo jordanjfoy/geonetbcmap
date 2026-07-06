@@ -1,6 +1,6 @@
 
 import { useContext } from 'react';
-import MapContext from '../context/MapContext';
+import MapContext from '../../context/MapContext';
 import { Overlay } from 'ol';
 
 export default function PopUps() {

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import MapContext from "../../../context/MapContext";
+import MapContext from "../../context/MapContext";
 
 type DrawDropdownProps = {
   onSelect?: (type: string) => void;

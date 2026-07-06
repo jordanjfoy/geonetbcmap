@@ -1,6 +1,6 @@
 
 import { useContext } from 'react';
-import MapContext from '../context/MapContext';
+import MapContext from '../../context/MapContext';
 
 export default function DrawWidget() {
   const ctx = useContext(MapContext);

@@ -1,5 +1,5 @@
-import { SYMBOLS } from '../components/styles/styles';
-import  '.././index.scss'
+import { SYMBOLS } from '../../styles/styles';
+import  '../../styles/index.scss';
 
 
 

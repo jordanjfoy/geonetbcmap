@@ -4,7 +4,7 @@ import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import CircleStyle from 'ol/style/Circle';
 import RegularShape from 'ol/style/RegularShape';
-import { SYMBOLS } from '.././styles/styles'
+import { SYMBOLS } from '../../styles/styles'
 
 const styleCache: Record<number, Style> = {};
 

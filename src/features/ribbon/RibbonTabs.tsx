@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { UIContext } from "../../../context/UIContext";
-import MapContext from "../../../context/MapContext";
-import { DrawDropdown } from "../content/DrawDropdown";
+import { UIContext } from "../../context/UIContext";
+import MapContext from "../../context/MapContext";
+import { DrawDropdown } from "../drawing/DrawDropdown";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");

@@ -3,7 +3,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { WFS, GeoJSON } from 'ol/format';
 import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
-import { styleFunction } from './StyleComponent'; 
+import { styleFunction } from './Style'; 
 
 export default function VecLayersComponent(): LayerGroup{
   const vectorSource = new VectorSource({

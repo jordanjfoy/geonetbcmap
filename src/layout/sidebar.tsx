@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { UIContext } from "../../context/UIContext";
+import { UIContext } from "../context/UIContext";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
