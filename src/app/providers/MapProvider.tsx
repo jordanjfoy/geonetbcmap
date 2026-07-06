@@ -36,6 +36,21 @@ export function MapProvider({ children }: { children: ReactNode }) {
         view.setCenter([center[0] + 10000, center[1]]); // Pan right by 10,000 units
       }
     }
+
+  const previousExtent = () => {
+    if (mapInstance) {
+      const view = mapInstance.getView();
+      const extentHistory = (view as any).extentHistory || [];
+      let currentIndex = (view as any).currentIndex || -1;
+    }
+  }  
+
+  const nextExtent = () => {
+    if (mapInstance) {
+      const view = mapInstance.getView();
+      const extentHistory = (view as any).extentHistory || [];
+      let currentIndex = (view as any).currentIndex || -1;
+    }
   };
 
   
@@ -55,8 +70,11 @@ export function MapProvider({ children }: { children: ReactNode }) {
       zoomIn,
       zoomOut,
       pan,
+      previousExtent,
+      nextExtent
       }}>
       {children}
     </MapContext.Provider>
   );
-}
+  }}
+  

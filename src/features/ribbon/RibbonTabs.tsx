@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { UIContext } from "../../context/UIContext";
 import MapContext from "../../context/MapContext";
 import { DrawDropdown } from "../drawing/DrawDropdown";
+import {nextExtent, previousExtent} from "../navigation/RememberExtent";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
@@ -43,8 +44,8 @@ export default function RibbonTabs() {
             <button onClick={() => mapCtx?.zoomIn()}>Zoom In</button>
             <button onClick={() => mapCtx?.zoomOut()}>Zoom Out</button>
             <button onClick={() => mapCtx?.pan()}>Pan</button>
-            <button onClick={() => setAction("Previous Extent")}>Previous Extent</button>
-            <button onClick={() => setAction("Next Extent")}>Next Extent</button>
+            <button onClick={() => mapCtx?.previousExtent()}>Previous Extent</button>
+            <button onClick={() => mapCtx?.nextExtent()}>Next Extent</button>
             <button onClick={() => { 
               {setAction("Layers")};  
               {setSidebarMode("Layers")}

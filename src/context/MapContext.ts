@@ -7,7 +7,6 @@ type MapContextType = {
   baseLayersRef: React.RefObject<any>;
   activeTool: string | null;
   map: Map | null;
-  
   setActiveTool: (tool: string | null) => void;
   setMapInstance: (map: Map | null) => void;
   drawType: string | null;  
@@ -20,6 +19,8 @@ type MapContextType = {
   setOverlayElement: React.Dispatch<
     React.SetStateAction<HTMLElement | null>
   >;
+  previousExtent: () => void;
+  nextExtent: () => void;
   
 
 };
