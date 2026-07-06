@@ -4,6 +4,9 @@ import VectorSource from 'ol/source/Vector';
 import { WFS, GeoJSON } from 'ol/format';
 import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
 import { styleFunction } from './Style'; 
+import TileLayer from 'ol/layer/Tile';
+import TileWMS from 'ol/source/TileWMS';
+
 
 export default function VecLayersComponent(): LayerGroup{
   const vectorSource = new VectorSource({
@@ -28,7 +31,7 @@ export default function VecLayersComponent(): LayerGroup{
         style: styleFunction,
         minZoom: 12, 
         maxZoom: 20
-      }),
+      })
     ],
   });
 

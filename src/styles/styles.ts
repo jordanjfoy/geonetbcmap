@@ -1,9 +1,58 @@
-export const SYMBOLS = [    
-  { id: 1, label: 'Published GCM', color: '#1f78b4', shape: 'circle' }, //blue
-  { id: 2, label: 'Provincial Benchmark', color: '#33a02c', shape: 'diamond' }, //green
-  { id: 3, label: 'Federal Benchmark', color: '#6a3d9a', shape: 'triangle' }, //purple
-  { id: 4, label: 'Low Accuracy', color: '#ff7f00', shape: 'circle' }, //orange
-  { id: 5, label: 'Terrestrial', color: '#00bcd4', shape: 'circle' }, // cyan
-  { id: 6, label: 'Preliminary', color: '#ffd700', shape: 'circle' }, // yellow
-  { id: 7, label: 'Destroyed', color: '#e31a1c', shape: 'cross' } //red
-]
+
+export const SYMBOLS = [
+  {
+    id: 1,
+    label: 'Published GCM (GPS or GPS and Terrestrial)',
+    color: '#000000',
+    shape: 'diamond',
+    size: 12
+  },
+
+  {
+    id: 2,
+    label: 'Published GCM (Terrestrial Only)',
+    color: '#004da8',
+    shape: 'triangle',
+    size: 16
+  },
+
+  {
+    id: 3,
+    label: 'Published Federal Benchmarks (Except GPS)',
+    color: '#ff0000',
+    shape: 'square',
+    size: 7
+  },
+
+  {
+    id: 4,
+    label: 'Published Provincial Benchmarks (Except GPS)',
+    color: '#ff5500',
+    shape: 'square',
+    size: 7
+  },
+
+  {
+    id: 5,
+    label: 'Non-Published GCM (Low Horizontal Accuracy)',
+    color: '#c500ff',
+    shape: 'triangle',
+    size: 15
+  },
+
+  {
+    id: 6,
+    label: 'Non-Published GCM (Preliminary)',
+    color: '#0000ff',
+    shape: 'circle',
+    size: 10
+  },
+
+  {
+    id: 7,
+    label: 'Destroyed GCM',
+    color: '#ff5500',
+    shape: 'cross',
+    size: 5
+  }
+];
