@@ -1,5 +1,5 @@
 import { Header } from '../layout/Header';
-import RibbonTabs from "./components/ribbon/tabs/RibbonTabs"; /*revist this!! */
+import RibbonTabs from "../features/ribbon/RibbonTabs"; /*revist this!! */
 import  OpenLayersMap from '../features/maps/OpenLayersMap';
 import '../styles/index.scss';
 import Sidebar from '../layout/sidebar';

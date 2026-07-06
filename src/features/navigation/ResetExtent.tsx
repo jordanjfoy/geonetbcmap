@@ -1,7 +1,7 @@
 /* This will need to be removed eventually!*/ 
 
 import { useContext } from 'react';
-import MapContext from '../context/MapContext';
+import MapContext from '../../context/MapContext';
 
 export default function ResetExtentWidget() {
   const ctx = useContext(MapContext);

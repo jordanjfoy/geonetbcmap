@@ -1,6 +1,6 @@
 import { useState, useRef, ReactNode } from 'react';
 import Map from 'ol/Map';
-import MapContext from './MapContext';
+import MapContext from '../../context/MapContext';
 import LayerGroup from 'ol/layer/Group';
 
 export function MapProvider({ children }: { children: ReactNode }) {
