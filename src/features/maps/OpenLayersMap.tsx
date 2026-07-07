@@ -60,6 +60,7 @@ export default function OpenLayersMap() {
     const overlays = VectorLayersComponent();
     const vectors = flattenVectorLayers(overlays);
 
+    /*this portion here sets initial view of the map to apporx cover all of BC*/
     const initialView = {
       center: [-13800000, 7200000],
       zoom: 6,
@@ -74,6 +75,21 @@ export default function OpenLayersMap() {
         center: initialView.center,
         zoom: initialView.zoom,
       }),
+    });
+
+
+    /*this is to track history for next/previous extent*/
+    map.on("moveend", () => {
+      const view = map.getView();
+
+      const history = (view as any).extentHistory || [];
+
+      history.push({
+        center: view.getCenter(),
+        zoom: view.getZoom(),
+      });
+
+      (view as any).extentHistory = history;
     });
 
     mapInstanceRef.current = map;
