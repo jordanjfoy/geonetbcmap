@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import { UIContext } from "../context/UIContext";
+import { FeatureForm } from "../features/query/FeatureForm";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const { sidebarMode } = useContext(UIContext)!;
-
+  const normalizedMode = sidebarMode?.toLowerCase();
 
   function toggleSidebar() {
     setCollapsed(!collapsed);
@@ -17,7 +18,8 @@ export default function Sidebar() {
       </button>
       <header>Menu</header>
       <div className="sidebar-content">
-        {sidebarMode === "layers" && <div> Layers Panel</div>}
+        {normalizedMode === "layers" && <div>Layers Panel</div>}
+        {normalizedMode === "form" && <FeatureForm />}
       </div>
     </aside>
   );

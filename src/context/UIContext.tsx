@@ -14,6 +14,7 @@ type UIContextType = {
   setPopupData: (data: PopupData | null) => void;
   showPopup: boolean;
   setShowPopup: (show: boolean) => void;
+  setFeatureFormData?: (data: Record<string, any> | null) => void;
 };
 
 export const UIContext = createContext<UIContextType | null>(null);
@@ -22,6 +23,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const [sidebarMode, setSidebarMode] = useState<string | null>(null);
   const [popupData, setPopupData] = useState<PopupData | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [featureFormData, setFeatureFormData] = useState<Record<string, any> | null>(null);
 
     return (
         <UIContext.Provider value={{ 
@@ -30,7 +32,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
           popupData,
           setPopupData,
           showPopup,
-          setShowPopup
+          setShowPopup,
+          setFeatureFormData
         }}>
         {children}
         </UIContext.Provider>

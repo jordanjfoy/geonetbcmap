@@ -15,8 +15,7 @@ export default function RibbonTabs() {
 
   /* getting setActive Tool from MapContext */
   const mapCtx = useContext(MapContext);
-  const { setActiveTool } = mapCtx || {};
-
+  
   return (
     <>
       {/* Top-level tabs */}
@@ -65,19 +64,24 @@ export default function RibbonTabs() {
             <button onClick={() => setAction("Clear")}>Delete</button>
             <button onClick={() => setAction("Grid")}>Delete</button>
             <button onClick={() => setAction("Clear Grid")}>Delete</button>
-            <button onClick={() => setAction("Plot Coordinates")}>Delete</button>
           </div>
         )}
 
         {tab === "Query" && (
           <div className="ribbon-group">
-            <button onClick={() => setAction("Query")}>Select</button>
-            <button onClick={() => setAction("Point")}>Search</button>
+            <button onClick={() => setAction("Query")}>Query</button>
+            <button onClick={() => setAction("Point")}>Select</button>
             <button onClick={() => setAction("Freehand")}>Search</button>
             <button onClick={() => setAction("Line")}>Search</button>
             <button onClick={() => setAction("Polygon")}>Search</button>
             <button onClick={() => setAction("Rectangle")}>Search</button>
             <button onClick={() => setAction("Distance")}>Search</button>
+            <button onClick={() => {
+              setAction("Add Feature");
+              setSidebarMode("form");
+            }}>
+              Add Feature
+            </button>
           </div>
         )}
 
