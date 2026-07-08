@@ -69,19 +69,18 @@ export default function RibbonTabs() {
 
         {tab === "Query" && (
           <div className="ribbon-group">
-            <button onClick={() => setAction("Query")}>Query</button>
+            <button onClick={() => {
+              setAction("Add Feature");
+              setSidebarMode("form");
+            }}>
+              Query
+            </button>
             <button onClick={() => setAction("Point")}>Select</button>
             <button onClick={() => setAction("Freehand")}>Search</button>
             <button onClick={() => setAction("Line")}>Search</button>
             <button onClick={() => setAction("Polygon")}>Search</button>
             <button onClick={() => setAction("Rectangle")}>Search</button>
             <button onClick={() => setAction("Distance")}>Search</button>
-            <button onClick={() => {
-              setAction("Add Feature");
-              setSidebarMode("form");
-            }}>
-              Add Feature
-            </button>
           </div>
         )}
 
