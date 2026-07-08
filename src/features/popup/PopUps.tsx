@@ -13,9 +13,9 @@ export default function PopUps() {
     
 
     const overlay = new Overlay({
-    element: overlayElement,
-    positioning: 'bottom-center', // Controls the positioning of the overlay
-    stopEvent: false,
+        element: overlayElement,
+        positioning: 'bottom-center', // Controls the positioning of the overlay
+        stopEvent: false,
     });
 
     }   
