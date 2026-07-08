@@ -47,7 +47,7 @@ export default function FeaturePopup({ map, selectedFeature, coordinate }: Props
     const props = selectedFeature.getProperties();
     delete (props as any).geometry;
 
-    const fieldsToShow = ["name", "type", "id"]; // change keys
+    const fieldsToShow = ["GCM_NUMBER", "type", "id"]; // change keys
     const lines = fieldsToShow
         .filter((k) => props[k] !== undefined)
         .map((k) => `${k}: ${props[k]}`);
