@@ -33,6 +33,8 @@ export default function FeaturePopup({ map, selectedFeature, coordinate }: Props
     };
   }, [map]);
 
+    
+  
     useEffect(() => {
     const overlay = overlayRef.current;
     const popupEl = popupRef.current;
@@ -47,27 +49,7 @@ export default function FeaturePopup({ map, selectedFeature, coordinate }: Props
     const props = selectedFeature.getProperties();
     delete (props as any).geometry;
 
-    const fieldsToShow = ["GCM_NUMBER", "type", "id"]; // change keys
-    const lines = fieldsToShow
-        .filter((k) => props[k] !== undefined)
-        .map((k) => `${k}: ${props[k]}`);
-
-    popupEl.innerHTML = lines.length ? lines.join("<br/>") : "Selected feature";
-    popupEl.style.display = "block";
-
-    // normalize coordinate to [x,y]
-    let pos: any = coordinate;
-
-    // if coordinate is a GeometryCoordinate (nested arrays), attempt to extract a point
-    if (Array.isArray(pos) && Array.isArray(pos[0]) && Array.isArray(pos[0][0])) {
-        // MultiPolygon-ish: pos = [ [ [ [x,y], ... ] , ... ] , ... ]
-        pos = pos[0][0][0];
-    } else if (Array.isArray(pos) && Array.isArray(pos[0]) && typeof pos[0][0] === "number") {
-        // Polygon-ish: pos = [ [x,y], ... ] (but sometimes extra nesting)
-        // take first vertex
-        pos = pos[0];
-    }
-
+    const pos = coordinate;
     // final guard: must look like [x,y]
     if (!Array.isArray(pos) || typeof pos[0] !== "number" || typeof pos[1] !== "number") {
         popupEl.style.display = "none";
@@ -77,5 +59,31 @@ export default function FeaturePopup({ map, selectedFeature, coordinate }: Props
     overlay.setPosition(pos);
     }, [selectedFeature, coordinate]);
 
-  return <div ref={popupRef} style={{ display: "none" }} className="ol-popup" />;
+  
+    const featureProps = selectedFeature ? selectedFeature.getProperties() : {};
+
+    return (
+      <div
+          ref={popupRef}
+          style={{ display: selectedFeature ? "block" : "none" }}
+          className="ol-popup card shadow"
+        >
+          <div className="card-body">
+            <h5 className="card-title">Hello!</h5>
+
+            <p>
+              <strong>GCM_NUMBER:</strong> {featureProps.GCM_NUMBER}
+            </p>
+
+            <p>
+              <strong>Type:</strong> {featureProps.type}
+            </p>
+
+            <p>
+              <strong>ID:</strong> {featureProps.id}
+            </p>
+          </div>
+        </div>
+
+    );
 }
