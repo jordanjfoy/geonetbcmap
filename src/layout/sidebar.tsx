@@ -16,10 +16,11 @@ export default function Sidebar() {
       <button className='toggle-button' onClick={toggleSidebar}>
         T
       </button>
-      <header>Menu</header>
+      <header></header>
       <div className="sidebar-content">
         {normalizedMode === "layers" && <div>Layers Panel</div>}
         {normalizedMode === "form" && <FeatureForm />}
+        {normalizedMode === "query" && <FeatureForm />}
       </div>
     </aside>
   );
