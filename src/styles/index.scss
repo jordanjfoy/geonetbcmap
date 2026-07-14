@@ -71,17 +71,44 @@ html, body, #root {
 
 .sidebar {
   position: relative;
-  overflow: visible;
-  width: 250px;
+  overflow: hidden;
+  width: 280px;
+  min-width: 220px;
+  max-width: 480px;
   background-color: #f4f4f4;
   padding: 1rem;
   border-right: 1px solid #ccc;
   flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
-
 
 .sidebar.collapsed {
   width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.sidebar-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+}
+
+.resize-handle:hover {
+  background: rgba(59, 130, 246, 0.15);
 }
 
 // This is the layout for the sidebar :) 

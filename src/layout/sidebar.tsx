@@ -1,9 +1,13 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { UIContext } from "../context/UIContext";
-import { FeatureForm } from "../features/query/FeatureForm";
+import WfsQuery from "../features/query/FeatureForm";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarRef = useRef<HTMLElement | null>(null);
   const { sidebarMode } = useContext(UIContext)!;
   const normalizedMode = sidebarMode?.toLowerCase();
 
@@ -11,16 +15,46 @@ export default function Sidebar() {
     setCollapsed(!collapsed);
   }
 
+  function startResize(e: ReactMouseEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setIsResizing(true);
+  }
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const onMouseMove = (event: MouseEvent) => {
+      if (!sidebarRef.current) return;
+      const rect = sidebarRef.current.getBoundingClientRect();
+      const nextWidth = event.clientX - rect.left;
+      setSidebarWidth(Math.min(Math.max(nextWidth, 220), 480));
+    };
+
+    const onMouseUp = () => setIsResizing(false);
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [isResizing]);
+
   return (
-    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+    <aside
+      ref={sidebarRef}
+      className={`sidebar ${collapsed ? "collapsed" : ""}`}
+      style={{ width: collapsed ? 60 : sidebarWidth }}
+    >
+      <div className="resize-handle" onMouseDown={startResize} />
       <button className='toggle-button' onClick={toggleSidebar}>
-        T
+        {collapsed ? "→" : "←"}
       </button>
       <header></header>
       <div className="sidebar-content">
         {normalizedMode === "layers" && <div>Layers Panel</div>}
-        {normalizedMode === "form" && <FeatureForm />}
-        {normalizedMode === "query" && <FeatureForm />}
+        {normalizedMode === "form" && <WfsQuery />}
       </div>
     </aside>
   );
