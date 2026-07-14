@@ -53,6 +53,60 @@ li.tabs__item {
   word-break: break-word;
 }
 
+.query-results-list {
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #f9fafb;
+  padding: 0.6rem 0.75rem;
+}
+
+.query-gcm-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.query-gcm-button {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+}
+
+.query-gcm-button:hover {
+  background: #eff6ff;
+}
+
+.query-results-table-wrapper {
+  margin-top: 0.5rem;
+  overflow-x: auto;
+}
+
+.query-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.query-results-table th,
+.query-results-table td {
+  border: 1px solid #d1d5db;
+  padding: 0.35rem 0.45rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.query-results-table th {
+  background: #e5e7eb;
+}
+
 /* Styles for when "Use validation" option is selected */
 .validateQuery .queryBuilder {
   & .ruleGroup.queryBuilder-invalid {

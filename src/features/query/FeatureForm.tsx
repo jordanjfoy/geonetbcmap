@@ -1,9 +1,14 @@
-import { useState } from 'react';
-import type { RuleGroupType, RuleType } from 'react-querybuilder';
+import { Fragment, useState } from 'react';
+import type { RuleGroupType } from 'react-querybuilder';
 import { QueryBuilder } from 'react-querybuilder';
 import { fields } from './fields';
 import 'react-querybuilder/dist/query-builder.css';
 import './query_styles.css';
+
+type FeatureRow = {
+  id: string;
+  properties: Record<string, unknown>;
+};
 
 const initialQuery: RuleGroupType = { combinator: 'and', rules: [] };
 const WFS_URL = 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP/ows?';
@@ -83,6 +88,8 @@ export const WfsQuery = () => {
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [rows, setRows] = useState<FeatureRow[]>([]);
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
 
   const handleRunQuery = async () => {
     const cqlFilter = buildCqlFilter(query);
@@ -90,10 +97,11 @@ export const WfsQuery = () => {
       service: 'WFS',
       version: '2.0.0',
       request: 'GetFeature',
-      typeName: 'WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP',
+      typeNames: 'WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP',
       outputFormat: 'application/json',
       srsName: 'EPSG:3857',
       maxFeatures: '50',
+      propertyName: 'GCM_NUMBER',
     });
 
     if (cqlFilter) {
@@ -102,6 +110,7 @@ export const WfsQuery = () => {
 
     const requestUrl = `${WFS_URL}${params.toString()}`;
     setIsLoading(true);
+    setRows([]);
     setStatus(cqlFilter ? `Sending filter: ${cqlFilter}` : 'Sending unfiltered WFS request...');
 
     try {
@@ -116,8 +125,19 @@ export const WfsQuery = () => {
       }
 
       const data = await response.json();
-      const featureCount = Array.isArray(data?.features) ? data.features.length : 0;
-      setStatus(`Loaded ${featureCount} feature${featureCount === 1 ? '' : 's'} from the WFS service.`);
+      const features = Array.isArray(data?.features) ? data.features : [];
+      const featureRows = features.map((feature: { id?: string; properties?: Record<string, unknown> }) => ({
+        id: typeof feature.id === 'string' ? feature.id : `feature-${Math.random().toString(36).slice(2)}`,
+        properties: feature.properties ?? {},
+      }));
+
+      setRows(featureRows);
+      setSelectedRowId(null);
+      setStatus(
+        featureRows.length > 0
+          ? `Returned ${featureRows.length} GCM${featureRows.length === 1 ? '' : 's'} from the WFS service.`
+          : 'No records matched the current filter.'
+      );
       console.log('WFS query result:', data);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown WFS error';
@@ -137,6 +157,49 @@ export const WfsQuery = () => {
           {isLoading ? 'Loading…' : 'Run WFS query'}
         </button>
         {status ? <p className="query-status-text">{status}</p> : null}
+        {rows.length > 0 ? (
+          <div className="query-results-list">
+            <strong>Returned GCMs</strong>
+            <ul className="query-gcm-list">
+              {rows.map((row) => {
+                const gcmValue = row.properties.GCM_NUMBER ?? row.properties.gcm_number ?? row.properties.GCM ?? row.properties.gcm;
+                const label = gcmValue == null ? 'Unknown GCM' : String(gcmValue);
+
+                return (
+                  <li key={row.id}>
+                    <button
+                      type="button"
+                      className="query-gcm-button"
+                      onClick={() => setSelectedRowId(row.id === selectedRowId ? null : row.id)}
+                    >
+                      {label}
+                    </button>
+                    {selectedRowId === row.id ? (
+                      <div className="query-results-table-wrapper">
+                        <table className="query-results-table">
+                          <thead>
+                            <tr>
+                              <th>Attribute</th>
+                              <th>Value</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.entries(row.properties).map(([key, value]) => (
+                              <tr key={`${row.id}-${key}`}>
+                                <td>{key}</td>
+                                <td>{value == null ? '' : String(value)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
       </div>
     </div>
   );
