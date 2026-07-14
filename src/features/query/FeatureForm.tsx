@@ -1,143 +1,144 @@
+import { useState } from 'react';
+import type { RuleGroupType, RuleType } from 'react-querybuilder';
+import { QueryBuilder } from 'react-querybuilder';
+import { fields } from './fields';
+import 'react-querybuilder/dist/query-builder.css';
+import './query_styles.css';
 
-import React, { useState } from "react";
+const initialQuery: RuleGroupType = { combinator: 'and', rules: [] };
+const WFS_URL = 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP/ows?';
 
+const operatorMap: Record<string, string> = {
+  equals: '=',
+  notEqual: '!=',
+  lessThan: '<',
+  lessThanOrEqual: '<=',
+  greaterThan: '>',
+  greaterThanOrEqual: '>=',
+};
 
-const fields = [
-  "GCM_NUMBER",
-  "LATITUDE_DEGREES",
-  "LATITUDE_MINUTES",
-  "LATITUDE_SECONDS",
-  "LONGITUDE_DEGREES",
-  "LONGITUDE_MINUTES",
-  "LONGITUDE_SECONDS",
-  "SYMBOLOGY_TYPE",
-  "TABLET_MARKING",
-  "MUNICIPALITY_NAME",
-  "MASCOTW_GCM_QUERY_URL",
-  "OBJECTID"
-];
+const formatValue = (value: unknown): string => {
+  if (typeof value === 'number') {
+    return String(value);
+  }
 
-export default function WfsQuery() {
-  const [query, setQuery] = useState({
-    field: "GCM_NUMBER",
-    operator: "=",
-    value: ""
-  });
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
 
-  const [results, setResults] = useState<any>(null);
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
+  const text = String(value).trim();
+  return `'${text.replace(/'/g, "''")}'`;
+};
 
-    setQuery((prev) => ({
-      ...prev,
-      value
-    }));
-  };
+const buildCqlFilter = (group: RuleGroupType): string | null => {
+  const clauses = group.rules
+    .map((rule) => {
+      if ('rules' in rule) {
+        const nestedFilter = buildCqlFilter(rule);
+        return nestedFilter ? `(${nestedFilter})` : null;
+      }
 
-  const runQuery = async () => {
-    let cqlFilter = "";
+      const field = rule.field;
+      const operator = rule.operator ?? 'equals';
+      const rawValue = rule.value;
 
-    switch (query.operator) {
-      case "LIKE":
-        cqlFilter = `${query.field} LIKE '%${query.value}%'`;
-        break;
+      if (!field || rawValue === null || rawValue === undefined || rawValue === '') {
+        return null;
+      }
 
-      default:
-        cqlFilter = `${query.field} ${query.operator} '${query.value}'`;
-        break;
+      const cqlOperator = operatorMap[operator] ?? '=';
+      const valueText = formatValue(rawValue);
+
+      if (operator === 'contains') {
+        const escaped = String(rawValue).trim().replace(/'/g, "''");
+        return `${field} LIKE '%${escaped}%'`;
+      }
+
+      if (operator === 'beginsWith') {
+        const escaped = String(rawValue).trim().replace(/'/g, "''");
+        return `${field} LIKE '${escaped}%'`;
+      }
+
+      if (operator === 'endsWith') {
+        const escaped = String(rawValue).trim().replace(/'/g, "''");
+        return `${field} LIKE '%${escaped}'`;
+      }
+
+      return `${field} ${cqlOperator} ${valueText}`;
+    })
+    .filter((clause): clause is string => Boolean(clause));
+
+  if (clauses.length === 0) {
+    return null;
+  }
+
+  return clauses.join(` ${group.combinator.toUpperCase()} `);
+};
+
+export const WfsQuery = () => {
+  const [query, setQuery] = useState(initialQuery);
+  const [status, setStatus] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRunQuery = async () => {
+    const cqlFilter = buildCqlFilter(query);
+    const params = new URLSearchParams({
+      service: 'WFS',
+      version: '2.0.0',
+      request: 'GetFeature',
+      typeName: 'WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP',
+      outputFormat: 'application/json',
+      srsName: 'EPSG:3857',
+      maxFeatures: '50',
+    });
+
+    if (cqlFilter) {
+      params.set('cql_filter', cqlFilter);
     }
 
-    console.log("CQL Filter:", cqlFilter);
-
-    const url =
-      'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP/ows?' +
-      'service=WFS&version=2.0.0&request=GetFeature' +
-      '&typeName=WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP' +
-      '&outputFormat=application/json' + 
-      `CQL_FILTER=${encodeURIComponent(cqlFilter)}`;
+    const requestUrl = `${WFS_URL}${params.toString()}`;
+    setIsLoading(true);
+    setStatus(cqlFilter ? `Sending filter: ${cqlFilter}` : 'Sending unfiltered WFS request...');
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(requestUrl, {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
 
       if (!response.ok) {
-        throw new Error(response.statusText);
+        throw new Error(`WFS request failed with ${response.status}`);
       }
 
       const data = await response.json();
-
-      setResults(data);
-
-      console.log(data);
+      const featureCount = Array.isArray(data?.features) ? data.features.length : 0;
+      setStatus(`Loaded ${featureCount} feature${featureCount === 1 ? '' : 's'} from the WFS service.`);
+      console.log('WFS query result:', data);
     } catch (error) {
-      console.error("Query failed:", error);
+      const message = error instanceof Error ? error.message : 'Unknown WFS error';
+      setStatus(message);
+      console.error('WFS query failed:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div>
-      <h3>Query Layer</h3>
+    <div className="query-builder-container">
+      <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} />
 
-      <div
-        style={{
-          display: "flex",
-          gap: "4px",
-          alignItems: "center"
-        }}
-      >
-        <select
-          name="field"
-          value={query.field}
-          onChange={handleChange}
-        >
-          {fields.map((field) => (
-            <option
-              key={field}
-              value={field}
-            >
-              {field}
-            </option>
-          ))}
-        </select>
-
-        <select
-          name="operator"
-          value={query.operator}
-          onChange={handleChange}
-        >
-          <option value="=">=</option>
-          <option value="<>">!=</option>
-          <option value=">">&gt;</option>
-          <option value="<">&lt;</option>
-          <option value="LIKE">Contains</option>
-        </select>
-
-        <input
-          type="text"
-          name="value"
-          value={query.value}
-          onChange={handleChange}
-          placeholder="Enter value..."
-        />
-
-        <button onClick={runQuery}>
-          Query
+      <div className="query-action-bar">
+        <button type="button" className="query-submit-button" onClick={handleRunQuery} disabled={isLoading}>
+          {isLoading ? 'Loading…' : 'Run WFS query'}
         </button>
+        {status ? <p className="query-status-text">{status}</p> : null}
       </div>
-
-      {results && (
-        <div style={{ marginTop: "1rem" }}>
-          <h4>
-            Features Returned: {results.features?.length ?? 0}
-          </h4>
-
-          <pre>
-            {JSON.stringify(results.features, null, 2)}
-          </pre>
-        </div>
-      )}
     </div>
   );
-}
+};
+

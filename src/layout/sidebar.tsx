@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { UIContext } from "../context/UIContext";
-import WfsQuery from "../features/query/FeatureForm";
+import { WfsQuery } from "../features/query/FeatureForm";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -27,7 +27,7 @@ export default function Sidebar() {
       if (!sidebarRef.current) return;
       const rect = sidebarRef.current.getBoundingClientRect();
       const nextWidth = event.clientX - rect.left;
-      setSidebarWidth(Math.min(Math.max(nextWidth, 220), 480));
+      setSidebarWidth(Math.min(Math.max(nextWidth, 220), 600));
     };
 
     const onMouseUp = () => setIsResizing(false);
