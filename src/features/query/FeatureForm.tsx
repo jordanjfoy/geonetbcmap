@@ -10,7 +10,13 @@ type FeatureRow = {
   properties: Record<string, unknown>;
 };
 
-const initialQuery: RuleGroupType = { combinator: 'and', rules: [] };
+const initialQuery: RuleGroupType = { combinator: 'and', rules: [
+      {
+      field: 'GCM_NUMBER',
+      operator: 'equals',
+      value: '',
+    }
+] };
 const WFS_URL = 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_SP/ows?';
 
 const operatorMap: Record<string, string> = {

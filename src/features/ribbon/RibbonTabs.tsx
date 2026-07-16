@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { UIContext } from "../../context/UIContext";
 import MapContext from "../../context/MapContext";
 import { DrawDropdown } from "../drawing/DrawDropdown";
-import {nextExtent, previousExtent} from "../navigation/RememberExtent";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");

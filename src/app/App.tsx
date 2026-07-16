@@ -1,6 +1,6 @@
 import { Header } from '../layout/Header';
 import RibbonTabs from "../features/ribbon/RibbonTabs"; /*revist this!! */
-import  OpenLayersMap from '../features/maps/OpenLayersMap';
+import OpenLayersMap from '../features/maps/OpenLayersMap';
 import '../styles/index.scss';
 import Sidebar from '../layout/sidebar';
 import { UIProvider } from '../context/UIContext';

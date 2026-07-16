@@ -79,17 +79,40 @@ export default function OpenLayersMap() {
 
 
     /*this is to track history for next/previous extent*/
+    const view = map.getView();
+    (view as any).extentHistory = [];
+    (view as any).currentIndex = -1;
+    (view as any).navigationTimestamp = 0;
+
     map.on("moveend", () => {
-      const view = map.getView();
+      // Skip if this moveend was triggered by our navigation (within 100ms)
+      const now = Date.now();
+      if (now - (view as any).navigationTimestamp < 100) {
+        return;
+      }
 
-      const history = (view as any).extentHistory || [];
-
-      history.push({
-        center: view.getCenter(),
+      const history = (view as any).extentHistory;
+      const center = view.getCenter();
+      if (!center) return;
+      
+      const currentState = {
+        center: center.slice(),
         zoom: view.getZoom(),
-      });
+      };
 
-      (view as any).extentHistory = history;
+      // Don't save duplicates
+      const last = history[(view as any).currentIndex];
+      if (last && JSON.stringify(last) === JSON.stringify(currentState)) {
+        return;
+      }
+
+      // Remove any history after current index (when navigating back then moving)
+      if ((view as any).currentIndex < history.length - 1) {
+        history.length = (view as any).currentIndex + 1;
+      }
+
+      history.push(currentState);
+      (view as any).currentIndex = history.length - 1;
     });
 
     mapInstanceRef.current = map;

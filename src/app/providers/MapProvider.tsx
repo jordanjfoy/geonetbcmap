@@ -42,15 +42,39 @@ export function MapProvider({ children }: { children: ReactNode }) {
     if (mapInstance) {
       const view = mapInstance.getView();
       const extentHistory = (view as any).extentHistory || [];
-      let currentIndex = (view as any).currentIndex || -1;
+      const currentIndex = (view as any).currentIndex;
+      
+      if (currentIndex > 0) {
+        const nextIndex = currentIndex - 1;
+        (view as any).currentIndex = nextIndex;
+        (view as any).navigationTimestamp = Date.now();
+        
+        const state = extentHistory[nextIndex];
+        if (state && state.center) {
+          view.setCenter(state.center);
+          view.setZoom(state.zoom);
+        }
+      }
     }
-  };  
+  };
 
   const nextExtent = () => {
     if (mapInstance) {
       const view = mapInstance.getView();
       const extentHistory = (view as any).extentHistory || [];
-      let currentIndex = (view as any).currentIndex || -1;
+      const currentIndex = (view as any).currentIndex;
+      
+      if (currentIndex < extentHistory.length - 1) {
+        const nextIndex = currentIndex + 1;
+        (view as any).currentIndex = nextIndex;
+        (view as any).navigationTimestamp = Date.now();
+        
+        const state = extentHistory[nextIndex];
+        if (state && state.center) {
+          view.setCenter(state.center);
+          view.setZoom(state.zoom);
+        }
+      }
     }
   };
 
