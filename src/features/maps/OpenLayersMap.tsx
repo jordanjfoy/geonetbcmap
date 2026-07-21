@@ -48,12 +48,12 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
   const mapInstanceRef = useRef<Map | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
   const [selectedCoordinate, setSelectedCoordinate] = useState<any>(null);
+  const imageLayers = imageLayerGroup ?? ImageLayerComponents()
+
 
   const ctx = useContext(MapContext);
   if (!ctx) return null;
   const { baseLayersRef, setMapInstance } = ctx;
-
-  const wms = imageLayerGroup ?? ImageLayerComponents();
 
   useEffect(() => {
     if (!mapDivRef.current) return;
@@ -68,7 +68,6 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
 
     const baseLayers = BaseLayersComponent();
     const overlays = VectorLayersComponent();
-    const wms = ImageLayerComponents();
     const vectors = flattenVectorLayers(overlays);
 
 
@@ -81,7 +80,7 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
     const map = new Map({
       target: mapDivRef.current,
       controls: defaultControls().extend([ScaleControl]),
-      layers: [baseLayers, overlays, wms],
+      layers: [baseLayers, overlays, imageLayers],
       view: new View({
         projection: "EPSG:3857",
         center: initialView.center,

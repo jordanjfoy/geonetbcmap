@@ -6,7 +6,7 @@ export function buildImageLayerSet() {
   const monumentStatusSource = new ImageWMS({
     url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL/ows',
     params: {
-      LAYERS: ['pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL'],
+      LAYERS: 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL',
       VERSION: '1.3.0',
       FORMAT: 'image/png',
     },
@@ -16,7 +16,7 @@ export function buildImageLayerSet() {
   const networkClassSource = new ImageWMS({
     url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows',
     params: {
-      LAYERS: ['pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP'],
+      LAYERS: 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP',
       VERSION: '1.3.0',
       FORMAT: 'image/png',
       STYLE: '10519',

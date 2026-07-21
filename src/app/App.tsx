@@ -21,7 +21,7 @@ export default function App() {
           <div className="layout">
             <Sidebar />
             <main className="map-container">
-              <OpenLayersMap />
+              <OpenLayersMap imageLayerGroup={layerGroup}/>
             </main>
           </div>
           <Legend resolveLegendUrl={resolveLegendUrl} />

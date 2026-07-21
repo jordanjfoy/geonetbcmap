@@ -19,8 +19,17 @@ export default function Legend({
 
     const refresh = () => {
       const resolution = view.getResolution();
-      if (!resolution) return;
+      if (resolution == null) return;
       setLegendUrl(resolveLegendUrl(resolution));
+      
+      console.log("resolver:", resolveLegendUrl);
+      console.log("resolver type:", typeof resolveLegendUrl);
+
+      const url = resolveLegendUrl(resolution);
+
+      console.log("url:", url);
+      console.log("url type:", typeof url);
+
     };
 
     refresh();
@@ -33,5 +42,11 @@ export default function Legend({
 
   if (!legendUrl) return null;
 
-  return <img src={legendUrl} alt="Legend" />;
+
+  return (
+    <div className="legend">
+      <h4>Geodetic Control</h4>
+        <img src={legendUrl} alt="Legend" />
+    </div>
+  );
 }
