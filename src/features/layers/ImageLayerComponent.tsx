@@ -1,42 +1,47 @@
 import ImageLayer from 'ol/layer/Image';
-import { ImageWMS } from 'ol/source';
 import LayerGroup from 'ol/layer/Group';
+import { ImageWMS } from 'ol/source';
 
+export function buildImageLayerSet() {
+  const monumentStatusSource = new ImageWMS({
+    url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL/ows',
+    params: {
+      LAYERS: ['pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL'],
+      VERSION: '1.3.0',
+      FORMAT: 'image/png',
+    },
+    projection: '4326',
+  });
 
-export default function ImageLayersComponent():LayerGroup {
-  const MonumentStatus = new ImageLayer({
-    source: new ImageWMS({
-        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL/ows',
-        params: {
-            LAYERS: ['pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL'],
-            VERSION: ['1.3.0'],
-            FORMAT: ['image/png']
-        },
-        projection: '4326'
-        })
-    })
-    const NetworkClass = new ImageLayer({
-    source: new ImageWMS({
-        url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows',
-        params: {
-            LAYERS: ['pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP'],
-            VERSION: ['1.3.0'],
-            FORMAT: ['image/png'],
-            STYLE: ['10519']
-        },
-        projection: '4326'
-    })
+  const networkClassSource = new ImageWMS({
+    url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows',
+    params: {
+      LAYERS: ['pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP'],
+      VERSION: '1.3.0',
+      FORMAT: 'image/png',
+      STYLE: '10519',
+    },
+    projection: '4326',
+  });
 
-
-  })
-    const imageLayers:LayerGroup = new LayerGroup({   
+  const layerGroup = new LayerGroup({
     layers: [
-        MonumentStatus,
-        NetworkClass
+      new ImageLayer({ source: monumentStatusSource }),
+      new ImageLayer({ source: networkClassSource }),
     ],
   });
 
-  return imageLayers;
+  const resolveLegendUrl = (resolution: number) => {
+    return (
+      monumentStatusSource.getLegendUrl(resolution) ??
+      networkClassSource.getLegendUrl(resolution) ??
+      ''
+    );
+  };
+
+  return { layerGroup, resolveLegendUrl };
 }
 
-
+export default function ImageLayersComponent() {
+  return buildImageLayerSet().layerGroup;
+}

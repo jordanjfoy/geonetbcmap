@@ -15,6 +15,8 @@ import ImageLayerComponents from "../layers/ImageLayerComponent";
 import VectorLayersComponent from "../layers/VectorLayersComponent";
 import VectorLayer from "ol/layer/Vector";
 import FeaturePopup from "./interactions/FeaturePopup";
+import LayerGroup from 'ol/layer/Group';
+
 
 
 function flattenVectorLayers(layers: any): VectorLayer<any>[] {
@@ -37,7 +39,11 @@ function flattenVectorLayers(layers: any): VectorLayer<any>[] {
   return out;
 }
 
-export default function OpenLayersMap() {
+type OpenLayersMapProps = {
+  imageLayerGroup?: LayerGroup | null;
+};
+
+export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
   const mapDivRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<Map | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
@@ -46,6 +52,8 @@ export default function OpenLayersMap() {
   const ctx = useContext(MapContext);
   if (!ctx) return null;
   const { baseLayersRef, setMapInstance } = ctx;
+
+  const wms = imageLayerGroup ?? ImageLayerComponents();
 
   useEffect(() => {
     if (!mapDivRef.current) return;

@@ -1,26 +1,37 @@
-import { SYMBOLS } from '../../styles/styles';
-import  '../../styles/index.scss';
+import { useEffect, useState, useContext } from 'react';
+import MapContext from '../../context/MapContext';
 
-export default function Legend() {
-  return (
-    <div className="legend">
-      <h4>Geodetic Control</h4>
+type LegendResolver = (resolution: number) => string;
 
-      {SYMBOLS.map((item) => (
-        <div key={item.id} className="legend-row">
+export default function Legend({
+  resolveLegendUrl,
+}: {
+  resolveLegendUrl?: LegendResolver | null;
+}) {
+  const context = useContext(MapContext);
+  const map = context?.map ?? null;
+  const [legendUrl, setLegendUrl] = useState('');
 
-          <span
-            style={{
-              backgroundColor: item.color,
-              width: `${item.size}px`,
-              height: `${item.size}px`
-            }}
-          />
+  useEffect(() => {
+    if (!map || !resolveLegendUrl) return;
 
-          {item.label}
+    const view = map.getView();
 
-        </div>
-      ))}
-    </div>
-  );
+    const refresh = () => {
+      const resolution = view.getResolution();
+      if (!resolution) return;
+      setLegendUrl(resolveLegendUrl(resolution));
+    };
+
+    refresh();
+    view.on('change:resolution', refresh);
+
+    return () => {
+      view.un('change:resolution', refresh);
+    };
+  }, [map, resolveLegendUrl]);
+
+  if (!legendUrl) return null;
+
+  return <img src={legendUrl} alt="Legend" />;
 }
