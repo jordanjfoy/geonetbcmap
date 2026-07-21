@@ -11,9 +11,11 @@ import { useState } from "react";
 import MapInteractions from './MapInteractions';
 import MapContext from "../../context/MapContext";
 import BaseLayersComponent from "../layers/BaseLayersComponent";
+import ImageLayerComponents from "../layers/ImageLayerComponent";
 import VectorLayersComponent from "../layers/VectorLayersComponent";
 import VectorLayer from "ol/layer/Vector";
 import FeaturePopup from "./interactions/FeaturePopup";
+
 
 function flattenVectorLayers(layers: any): VectorLayer<any>[] {
   const out: VectorLayer<any>[] = [];
@@ -58,7 +60,9 @@ export default function OpenLayersMap() {
 
     const baseLayers = BaseLayersComponent();
     const overlays = VectorLayersComponent();
+    const wms = ImageLayerComponents();
     const vectors = flattenVectorLayers(overlays);
+
 
     /*this portion here sets initial view of the map to apporx cover all of BC*/
     const initialView = {
@@ -69,7 +73,7 @@ export default function OpenLayersMap() {
     const map = new Map({
       target: mapDivRef.current,
       controls: defaultControls().extend([ScaleControl]),
-      layers: [baseLayers, overlays],
+      layers: [baseLayers, overlays, wms],
       view: new View({
         projection: "EPSG:3857",
         center: initialView.center,

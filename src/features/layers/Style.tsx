@@ -1,4 +1,6 @@
 /* this is a maybe for now */ 
+/* turns out -> I CAN get style from WMS...so we dont' really need this anymore! */
+
 import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
@@ -7,7 +9,6 @@ import RegularShape from 'ol/style/RegularShape';
 import { SYMBOLS } from '../../styles/styles'
 
 const styleCache: Record<number, Style> = {};
-
 
 export const createSymbol = (symbolId: number) => {
   const symbol = SYMBOLS.find(s => s.id === symbolId);
