@@ -18,6 +18,7 @@ export default function Legend({
     if (!map || !resolveLegendUrl) return;
 
     const view = map.getView();
+    const layerGroup = map.getLayerGroup();
 
     const refresh = () => {
       const resolution = view.getResolution();
@@ -29,9 +30,11 @@ export default function Legend({
     refresh();
 
     view.on('change:resolution', refresh);
+    layerGroup.on('change', refresh); // catches visibility toggles anywhere in the tree
 
     return () => {
       view.un('change:resolution', refresh);
+      layerGroup.un('change', refresh);
     };
   }, [map, resolveLegendUrl]);
 

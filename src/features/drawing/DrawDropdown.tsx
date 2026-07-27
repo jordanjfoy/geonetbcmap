@@ -22,9 +22,10 @@ export const DrawDropdown = ({
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
       <button 
         onClick={() => setShowMenu(!showMenu)}
+        className="ribbon-button"
         style={{ position: 'relative' }}
       >
         Draw ▼

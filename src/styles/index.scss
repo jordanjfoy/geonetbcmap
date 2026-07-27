@@ -44,6 +44,12 @@ html, body, #root {
   border-bottom: 1px solid #e5e7eb;
 }
 
+.ribbon-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .tab {
   border: none;
   background: transparent;

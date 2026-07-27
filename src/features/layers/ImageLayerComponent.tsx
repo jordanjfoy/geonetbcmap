@@ -50,18 +50,17 @@ export function buildImageLayerSet() {
   const monumentUrl =
     'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL/ows';
 
-  // Keep a handle on every monument source AND its human-readable label,
-  // keyed by the same descriptive key, so legends can show labeled rows.
+  // Per-style bookkeeping, keyed the same way throughout.
   const monumentSources: Record<string, ImageWMS> = {};
-  const monumentLabels: Record<string, string> = {};
   const monumentStyles: Record<string, string> = {};
-
-
+  const monumentLabels: Record<string, string> = {}; // only set for the "representative" style in each group
+  const monumentLayers: Record<string, ImageLayer<ImageWMS>> = {};
+  const monumentGroups: Record<string, LayerGroup> = {}; // parent group for visibility checks
 
   const buildMonumentLayer = (
     key: string,
     styleId: string,
-    legendLabel?: string // only pass this for the representative style in each group
+    legendLabel?: string
   ) => {
     const source = new ImageWMS({
       url: monumentUrl,
@@ -74,20 +73,24 @@ export function buildImageLayerSet() {
       projection: '4326',
     });
 
+    const layer = new ImageLayer({ source });
+
+    monumentSources[key] = source;
+    monumentStyles[key] = styleId;
+    monumentLayers[key] = layer;
+
     if (legendLabel) {
-      monumentSources[key] = source;
       monumentLabels[key] = legendLabel;
-      monumentStyles[key] = styleId;
     }
 
-    return new ImageLayer({ source });
+    return layer;
   };
 
   // Published GCM - GPS or GPS + Terrestrial (diamond)
   const gpsGroup = new LayerGroup({
     layers: [
-      buildMonumentLayer('gpsRural', '1892', 'Published GCM - GPS'), // representative
-      buildMonumentLayer('gpsUrban', '1895'), // no legendLabel = no legend row
+      buildMonumentLayer('gpsRural', '1892', 'Published GCM - GPS'),
+      buildMonumentLayer('gpsUrban', '1895'),
     ],
   });
 
@@ -139,6 +142,15 @@ export function buildImageLayerSet() {
     ],
   });
 
+  // Map each representative key to its parent group, for visibility checks.
+  monumentGroups['gpsRural'] = gpsGroup;
+  monumentGroups['terrestrialRural'] = terrestrialGroup;
+  monumentGroups['federalRural'] = federalBenchmarksGroup;
+  monumentGroups['provincialRural'] = provincialBenchmarksGroup;
+  monumentGroups['lowAccuracyRural'] = lowAccuracyGroup;
+  monumentGroups['preliminaryRural'] = preliminaryGroup;
+  monumentGroups['destroyedRural'] = destroyedGroup;
+
   // Leave networkClassSource as-is
   const networkClassSource = new ImageWMS({
     url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows',
@@ -151,6 +163,8 @@ export function buildImageLayerSet() {
     projection: '4326',
   });
 
+  const networkClassLayer = new ImageLayer({ source: networkClassSource });
+
   const superLayerGroup = new LayerGroup({
     layers: [
       terrestrialGroup,
@@ -160,20 +174,28 @@ export function buildImageLayerSet() {
       lowAccuracyGroup,
       preliminaryGroup,
       destroyedGroup,
-      new ImageLayer({
-        source: networkClassSource,
-      }),
+      networkClassLayer,
     ],
   });
+
+  // A monument style counts as "visible" only if both its own layer
+  // AND its parent group are visible.
+  const isMonumentVisible = (key: string) => {
+    const layer = monumentLayers[key];
+    const group = monumentGroups[key];
+    if (!layer || !layer.getVisible()) return false;
+    if (group && !group.getVisible()) return false;
+    return true;
+  };
 
   const resolveLegendUrl = (resolution: number): LegendEntry[] => {
     const entries: LegendEntry[] = [];
 
-    for (const [key, source] of Object.entries(monumentSources)) {
-      if (!monumentLabels[key]) continue; // skip non-representative styles if you merged groups
+    for (const key of Object.keys(monumentLabels)) {
+      if (!isMonumentVisible(key)) continue;
 
-      const url = source.getLegendUrl(resolution, {
-        STYLE: monumentStyles[key], // <-- the missing piece
+      const url = monumentSources[key].getLegendUrl(resolution, {
+        STYLE: monumentStyles[key],
         WIDTH: 20,
         HEIGHT: 20,
       });
@@ -181,10 +203,12 @@ export function buildImageLayerSet() {
       if (url) entries.push({ label: monumentLabels[key], url });
     }
 
-    const networkUrl = networkClassSource.getLegendUrl(resolution, {
-      STYLE: '10519',
-    });
-    if (networkUrl) entries.push({ label: 'Network Class', url: networkUrl });
+    if (networkClassLayer.getVisible()) {
+      const networkUrl = networkClassSource.getLegendUrl(resolution, {
+        STYLE: '10519',
+      });
+      if (networkUrl) entries.push({ label: 'Network Class', url: networkUrl });
+    }
 
     return entries;
   };
