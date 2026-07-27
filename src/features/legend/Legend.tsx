@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from 'react';
 import MapContext from '../../context/MapContext';
+import type { LegendEntry } from '../layers/ImageLayerComponent'; // adjust path to match your file
 
-type LegendResolver = (resolution: number) => string;
+type LegendResolver = (resolution: number) => LegendEntry[];
 
 export default function Legend({
   resolveLegendUrl,
@@ -10,7 +11,8 @@ export default function Legend({
 }) {
   const context = useContext(MapContext);
   const map = context?.map ?? null;
-  const [legendUrl, setLegendUrl] = useState('');
+
+  const [legendEntries, setLegendEntries] = useState<LegendEntry[]>([]);
 
   useEffect(() => {
     if (!map || !resolveLegendUrl) return;
@@ -20,19 +22,12 @@ export default function Legend({
     const refresh = () => {
       const resolution = view.getResolution();
       if (resolution == null) return;
-      setLegendUrl(resolveLegendUrl(resolution));
-      
-      console.log("resolver:", resolveLegendUrl);
-      console.log("resolver type:", typeof resolveLegendUrl);
 
-      const url = resolveLegendUrl(resolution);
-
-      console.log("url:", url);
-      console.log("url type:", typeof url);
-
+      setLegendEntries(resolveLegendUrl(resolution));
     };
 
     refresh();
+
     view.on('change:resolution', refresh);
 
     return () => {
@@ -40,13 +35,18 @@ export default function Legend({
     };
   }, [map, resolveLegendUrl]);
 
-  if (!legendUrl) return null;
-
+  if (legendEntries.length === 0) return null;
 
   return (
     <div className="legend">
-      <h4>Geodetic Control</h4>
-        <img src={legendUrl} alt="Legend" />
+      <h4>Legend</h4>
+
+      {legendEntries.map(({ label, url }, index) => (
+        <div key={index} className="legend-row">
+          <img src={url} alt={label} />
+          <span>{label}</span>
+        </div>
+      ))}
     </div>
   );
 }
