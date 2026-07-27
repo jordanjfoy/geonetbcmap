@@ -65,7 +65,7 @@ export const fields: FullField[] = (
       validator,
     },
     {
-      name: 'SYMBOLOGY_TYPE',
+      name: 'SYMBOL_TYPE',
       label: 'Symbology',
       valueEditorType: 'select',
       values: SymbologyGroups,
@@ -73,7 +73,7 @@ export const fields: FullField[] = (
       defaultValue: false,
     },
     {
-      name: 'TABLET_MARKING',
+      name: 'MARKER_TAG',
       label: 'Tablet Marking',
       placeholder: 'Enter tablet marking',
       defaultOperator: 'equals',
@@ -89,7 +89,7 @@ export const fields: FullField[] = (
     },
     {
       /*This is a string value */
-      name: 'MASCOTW_GCM_QUERY_URL',
+      name: 'GEONETBC_GCM_QUERY_URL',
       label: 'GCM Query URL',
       placeholder: 'Enter GCM query URL',
       defaultOperator: 'equals',

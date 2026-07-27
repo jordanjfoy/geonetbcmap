@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, Key, useState } from 'react';
 import type { RuleGroupType } from 'react-querybuilder';
 import { QueryBuilder } from 'react-querybuilder';
 import { fields } from './fields';
@@ -107,7 +107,6 @@ export const WfsQuery = () => {
       outputFormat: 'application/json',
       srsName: 'EPSG:3857',
       maxFeatures: '50',
-      propertyName: 'GCM_NUMBER',
     });
 
     if (cqlFilter) {
@@ -154,9 +153,30 @@ export const WfsQuery = () => {
     }
   };
 
+  const LABELS: Record<string, string> = {
+      GCM_NUMBER:'GCM Number',
+      LATITUDE_DEGREES: 'Latitude (Degrees)',
+      LATITUDE_MINUTES: 'Latitude (Minutes)',   
+      LATITUDE_SECONDS: 'Latitude (Seconds)',
+      LONGITUDE_DEGREES:'Longitude (Degrees)',     
+      LONGITUDE_MINUTES: 'Longitude (Minutes)',
+      LONGITUDE_SECONDS: 'Longitude (Seconds)',  
+      SYMBOL_TYPE: 'Symbology',
+      MARKER_TAG: 'Tablet Marking',
+      MUNICIPALITY_NAME: 'Municipality Name',
+      GEONETBC_GCM_QUERY_URL: 'GCM Query URL',
+      OBJECTID: 'Object ID'
+  }
+
+  
   return (
     <div className="query-builder-container">
-      <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} />
+       
+      <QueryBuilder 
+        fields={fields} 
+        query={query} 
+        onQueryChange={setQuery} 
+      />
 
       <div className="query-action-bar">
         <button type="button" className="query-submit-button" onClick={handleRunQuery} disabled={isLoading}>
@@ -192,8 +212,20 @@ export const WfsQuery = () => {
                           <tbody>
                             {Object.entries(row.properties).map(([key, value]) => (
                               <tr key={`${row.id}-${key}`}>
-                                <td>{key}</td>
-                                <td>{value == null ? '' : String(value)}</td>
+                                <td>{LABELS[key] ?? key}</td>
+                                <td>
+                                  {key === 'GEONETBC_GCM_QUERY_URL' ? (
+                                    <a
+                                      href={String(value)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      Open Link
+                                    </a>
+                                  ) : (
+                                    String(value ?? '')
+                                  )}
+                                </td>
                               </tr>
                             ))}
                           </tbody>
@@ -211,3 +243,6 @@ export const WfsQuery = () => {
   );
 };
 
+
+   
+    
