@@ -1,22 +1,13 @@
 import DrawInteraction from './interactions/DrawInteraction';
-/*import SelectInteraction from './interactions/SelectInteraction';
-import TranslateInteraction from './interactions/TranslateInteraction';*/
+import ModifyInteraction from './interactions/ModifyInteraction';
+import SelectBoxInteraction from './interactions/SelectBoxInteraction';
 
 export default function MapInteractions() {
   return (
     <>
       <DrawInteraction />
+      <ModifyInteraction />
+      <SelectBoxInteraction />
     </>
   );
 }
-
-  /* use when other interactions are implemented
-  export default function MapInteractions() {
-  return (
-    <>
-      <DrawInteraction />
-      <SelectInteraction />
-      <TranslateInteraction />
-    </>
-  );
-*/

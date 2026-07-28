@@ -1,4 +1,4 @@
-import { Fragment, Key, useState } from 'react';
+import { useState } from 'react';
 import type { RuleGroupType } from 'react-querybuilder';
 import { QueryBuilder } from 'react-querybuilder';
 import { fields } from './fields';
@@ -88,6 +88,46 @@ const buildCqlFilter = (group: RuleGroupType): string | null => {
   }
 
   return clauses.join(` ${group.combinator.toUpperCase()} `);
+};
+
+const escapeCsvCell = (value: unknown): string => {
+  const str = value == null ? '' : String(value);
+  const escaped = str.replace(/"/g, '""');
+  return /[",\n]/.test(escaped) ? `"${escaped}"` : escaped;
+};
+
+const exportRowsToCSV = (
+  rows: FeatureRow[],
+  labels: Record<string, string>,
+  filename = 'gcm-query-results.csv'
+) => {
+  if (!rows.length) return;
+
+  // Collect all unique property keys across rows, in case some features differ
+  const allKeys = Array.from(
+    new Set(rows.flatMap((row) => Object.keys(row.properties)))
+  );
+
+  const headerRow = allKeys.map((key) => labels[key] ?? key);
+
+  const csvRows = [
+    headerRow.join(','),
+    ...rows.map((row) =>
+      allKeys.map((key) => escapeCsvCell(row.properties[key])).join(',')
+    ),
+  ];
+
+  const csvString = csvRows.join('\n');
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
 
 export const WfsQuery = () => {
@@ -181,6 +221,14 @@ export const WfsQuery = () => {
       <div className="query-action-bar">
         <button type="button" className="query-submit-button" onClick={handleRunQuery} disabled={isLoading}>
           {isLoading ? 'Loading…' : 'Run WFS query'}
+        </button>
+        <button
+          type="button"
+          className="query-export-button"
+          onClick={() => exportRowsToCSV(rows, LABELS)}
+          disabled={rows.length === 0}
+        >
+          Export CSV
         </button>
         {status ? <p className="query-status-text">{status}</p> : null}
         {rows.length > 0 ? (

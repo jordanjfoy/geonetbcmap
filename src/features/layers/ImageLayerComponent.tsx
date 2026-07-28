@@ -88,6 +88,7 @@ export function buildImageLayerSet() {
 
   // Published GCM - GPS or GPS + Terrestrial (diamond)
   const gpsGroup = new LayerGroup({
+    properties: { name: 'Published GCM - GPS' },
     layers: [
       buildMonumentLayer('gpsRural', '1892', 'Published GCM - GPS'),
       buildMonumentLayer('gpsUrban', '1895'),
@@ -96,6 +97,7 @@ export function buildImageLayerSet() {
 
   // Published GCM - Terrestrial (blue triangle)
   const terrestrialGroup = new LayerGroup({
+    properties: { name: 'Published GCM - Terrestrial' },
     layers: [
       buildMonumentLayer('terrestrialRural', '1891', 'Published GCM - Terrestrial'),
       buildMonumentLayer('terrestrialUrban', '1894'),
@@ -104,6 +106,7 @@ export function buildImageLayerSet() {
 
   // Published Federal Benchmarks (red square)
   const federalBenchmarksGroup = new LayerGroup({
+    properties: { name: 'Published Federal Benchmark' },
     layers: [
       buildMonumentLayer('federalRural', '4159', 'Published Federal Benchmark'),
       buildMonumentLayer('federalUrban', '4163'),
@@ -112,6 +115,7 @@ export function buildImageLayerSet() {
 
   // Published BC Benchmarks (red border square)
   const provincialBenchmarksGroup = new LayerGroup({
+    properties: { name: 'Published BC Benchmark' },
     layers: [
       buildMonumentLayer('provincialRural', '4160', 'Published BC Benchmark'),
       buildMonumentLayer('provincialUrban', '4164'),
@@ -120,6 +124,7 @@ export function buildImageLayerSet() {
 
   // Non-Published GCM (Low Horizontal Accuracy) (purple triangle)
   const lowAccuracyGroup = new LayerGroup({
+    properties: { name: 'Non-Published GCM - Low Accuracy' },
     layers: [
       buildMonumentLayer('lowAccuracyRural', '4161', 'Non-Published GCM - Low Accuracy'),
       buildMonumentLayer('lowAccuracyUrban', '4165'),
@@ -128,6 +133,7 @@ export function buildImageLayerSet() {
 
   // Non-Published GCM (Preliminary) (blue circle)
   const preliminaryGroup = new LayerGroup({
+    properties: { name: 'Non-Published GCM - Preliminary' },
     layers: [
       buildMonumentLayer('preliminaryRural', '4162', 'Non-Published GCM - Preliminary'),
       buildMonumentLayer('preliminaryUrban', '4166'),
@@ -136,6 +142,7 @@ export function buildImageLayerSet() {
 
   // Destroyed GCM
   const destroyedGroup = new LayerGroup({
+    properties: { name: 'Destroyed GCM' },
     layers: [
       buildMonumentLayer('destroyedRural', '1893', 'Destroyed GCM'),
       buildMonumentLayer('destroyedUrban', '1896'),
@@ -163,7 +170,10 @@ export function buildImageLayerSet() {
     projection: '4326',
   });
 
-  const networkClassLayer = new ImageLayer({ source: networkClassSource });
+  const networkClassLayer = new ImageLayer({ 
+    source: networkClassSource,  
+    properties: { name: 'Network Class' },
+  });
 
   const superLayerGroup = new LayerGroup({
     layers: [

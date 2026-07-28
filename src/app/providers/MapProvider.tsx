@@ -78,7 +78,7 @@ export function MapProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  
+  const imageLayersRef = useRef<LayerGroup>(null);
 
   return (
     <MapContext.Provider value={
@@ -96,7 +96,8 @@ export function MapProvider({ children }: { children: ReactNode }) {
       zoomOut,
       pan,
       previousExtent,
-      nextExtent
+      nextExtent,
+      imageLayersRef
       }}>
       {children}
     </MapContext.Provider>

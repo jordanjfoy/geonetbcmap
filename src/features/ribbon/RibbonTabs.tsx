@@ -38,10 +38,10 @@ export default function RibbonTabs() {
 
         {tab === "Navigation" && (
           <div className="ribbon-group">
-            <button onClick={() => mapCtx?.setExtent([-14000000, 6800000, -13500000, 7500000])}>Full Extent</button>
+            <button onClick={() => mapCtx?.setExtent([-15470000, 6110000, -12690000, 8400000])}>Full Extent</button>
             <button onClick={() => mapCtx?.zoomIn()}>Zoom In</button>
             <button onClick={() => mapCtx?.zoomOut()}>Zoom Out</button>
-            <button onClick={() => mapCtx?.pan()}>Pan</button>
+            {/* Removed button for now <button onClick={() => mapCtx?.pan()}>Pan</button> */}
             <button onClick={() => mapCtx?.previousExtent()}>Previous Extent</button>
             <button onClick={() => mapCtx?.nextExtent()}>Next Extent</button>
             <button onClick={() => { 
@@ -57,7 +57,7 @@ export default function RibbonTabs() {
         {tab === "Markup" && (
           <div className="ribbon-group">
             <DrawDropdown onSelect={(type) => setAction(`Draw: ${type}`)} />
-            <button className="ribbon-button" onClick={() => setAction("Edit")}>Edit</button>
+            <button className="ribbon-button" onClick={() => {setAction("Edit"); mapCtx?.setActiveTool("edit")}}>Edit</button>
             <button className="ribbon-button" onClick={() => setAction("Erase")}>Erase</button>
             <button className="ribbon-button" onClick={() => setAction("Clear")}>Delete</button>
 
@@ -72,12 +72,9 @@ export default function RibbonTabs() {
             }}>
               Query
             </button>
-            <button onClick={() => setAction("Point")}>Select</button>
-            <button onClick={() => setAction("Freehand")}>Search</button>
-            <button onClick={() => setAction("Line")}>Search</button>
-            <button onClick={() => setAction("Polygon")}>Search</button>
-            <button onClick={() => setAction("Rectangle")}>Search</button>
-            <button onClick={() => setAction("Distance")}>Search</button>
+            <button className="ribbon-button" onClick={() => {setAction("Select"); mapCtx?.setActiveTool("select")}}>Select</button>
+            <button className="ribbon-button" onClick={() => setAction("Freehand")}>Search</button>
+            <button className="ribbon-button" onClick={() => setAction("Distance")}>Search</button>
           </div>
         )}
 

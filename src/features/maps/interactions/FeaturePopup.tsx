@@ -69,18 +69,20 @@ export default function FeaturePopup({ map, selectedFeature, coordinate }: Props
           className="ol-popup card shadow"
         >
           <div className="card-body">
-            <h5 className="card-title">Hello!</h5>
-
             <p>
               <strong>GCM_NUMBER:</strong> {featureProps.GCM_NUMBER}
             </p>
 
             <p>
-              <strong>Type:</strong> {featureProps.type}
+              <strong>Type:</strong> {featureProps.SYMBOL_TYPE}
             </p>
 
             <p>
-              <strong>ID:</strong> {featureProps.id}
+              <strong>URL:</strong> <a 
+                href={featureProps.GEONETBC_GCM_QUERY_URL}  
+                target="_blank"  
+                rel="noopener noreferrer">
+                Link </a>
             </p>
           </div>
         </div>

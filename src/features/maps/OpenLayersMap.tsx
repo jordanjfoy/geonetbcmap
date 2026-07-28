@@ -53,7 +53,7 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
 
   const ctx = useContext(MapContext);
   if (!ctx) return null;
-  const { baseLayersRef, setMapInstance } = ctx;
+  const { baseLayersRef, setMapInstance, imageLayersRef } = ctx;
 
   useEffect(() => {
     if (!mapDivRef.current) return;
@@ -129,6 +129,7 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
     mapInstanceRef.current = map;
     setMapInstance(map);
     baseLayersRef.current = baseLayers;
+    imageLayersRef.current = imageLayers;
 
     
     

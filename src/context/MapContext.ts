@@ -1,6 +1,7 @@
 /*all AI generated */
 import { createContext } from 'react';
 import Map from 'ol/Map';
+import LayerGroup from 'ol/layer/Group';
 
 // 1. Define the shape of the context (what you are sharing)
 type MapContextType = {
@@ -21,6 +22,7 @@ type MapContextType = {
   >;
   previousExtent: () => void;
   nextExtent: () => void;
+  imageLayersRef: React.RefObject<LayerGroup | null>;
   
 
 };
