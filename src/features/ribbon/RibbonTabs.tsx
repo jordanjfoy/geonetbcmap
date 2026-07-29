@@ -58,8 +58,8 @@ export default function RibbonTabs() {
           <div className="ribbon-group">
             <DrawDropdown onSelect={(type) => setAction(`Draw: ${type}`)} />
             <button className="ribbon-button" onClick={() => {setAction("Edit"); mapCtx?.setActiveTool("edit")}}>Edit</button>
-            <button className="ribbon-button" onClick={() => setAction("Erase")}>Erase</button>
-            <button className="ribbon-button" onClick={() => setAction("Clear")}>Delete</button>
+            <button className="ribbon-button" onClick={() => {setAction("Erase"); mapCtx?.setActiveTool("erase")}}>Erase</button>
+            <button className="ribbon-button" onClick={() => {setAction("Clear"); mapCtx?.setActiveTool("clear")}}>Clear</button>
 
           </div>
         )}

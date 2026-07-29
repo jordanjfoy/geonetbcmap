@@ -13,6 +13,7 @@ export default function Legend({
   const map = context?.map ?? null;
 
   const [legendEntries, setLegendEntries] = useState<LegendEntry[]>([]);
+  const [minimized, setMinimized] = useState(false);
 
   useEffect(() => {
     if (!map || !resolveLegendUrl) return;
@@ -42,14 +43,29 @@ export default function Legend({
 
   return (
     <div className="legend">
-      <h4>Legend</h4>
-
-      {legendEntries.map(({ label, url }, index) => (
-        <div key={index} className="legend-row">
-          <img src={url} alt={label} />
-          <span>{label}</span>
-        </div>
-      ))}
+      <div className="legend-header">
+        <h4>Legend</h4>
+        <button
+          type="button"
+          onClick={() => setMinimized((v) => !v)}
+          aria-label={minimized ? 'Expand legend' : 'Minimize legend'}
+        >
+          {minimized ? '+' : '−'}
+        </button>
+      </div>
+      
+      {!minimized && (
+        <>
+        {legendEntries.map(({ label, url }, index) => (
+          <div key={index} className="legend-row">
+            <img src={url} alt={label} />
+            <span>{label}</span>
+          </div>
+        ))}
+        </>
+      )}
     </div>
   );
 }
+
+  

@@ -155,12 +155,34 @@ html, body, #root {
   background: white;
   padding: 10px;
   border-radius: 6px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 30%);
+}
+
+
+.legend-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.legend-toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .legend-row {
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.legend-row img {
+  width: 20px;
+  height: 20px;
 }
 
 
@@ -168,4 +190,23 @@ html, body, #root {
 //Pop up styling 
 .popover-body {
   min-width: 276px;
+}
+
+
+//For Erase tool tooltip 
+.erase-tooltip {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background-color: rgba(255, 0, 0, 0.35);
+  border: 2px solid rgba(255, 0, 0, 0.75);
+
+  pointer-events: none;
+  z-index: 9999;
+
+  transform: translate(-50%, -50%);
+}
+
+.erase-mode {
+  cursor: none;
 }
