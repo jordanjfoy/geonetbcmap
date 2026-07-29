@@ -13,7 +13,7 @@ export default function Legend({
   const map = context?.map ?? null;
 
   const [legendEntries, setLegendEntries] = useState<LegendEntry[]>([]);
-  const [minimized, setMinimized] = useState(false);
+  const [minimized, setMinimized] = useState(true);
 
   useEffect(() => {
     if (!map || !resolveLegendUrl) return;

@@ -8,13 +8,10 @@ import { UIProvider } from '../context/UIContext';
 import { MapProvider } from './providers/MapProvider';
 import Legend from '../features/legend/Legend';
 import { buildImageLayerSet } from '../features/layers/ImageLayerComponent';
-import EraseCursor from '../features/drawing/EraseTooltip';
-import MapContext from '../context/MapContext';
-import { useContext } from 'react';
+import GoToPoint from '../features/gotopoint/GoToPoint';
 
 export default function App() {
   const { layerGroup, resolveLegendUrl } = useMemo(() => buildImageLayerSet(), []);
-  const ctx = useContext(MapContext);
 
   return (
     <>
@@ -25,8 +22,8 @@ export default function App() {
           <div className="layout">
             <Sidebar />
             <main className="map-container">
+              <GoToPoint />
               <OpenLayersMap imageLayerGroup={layerGroup}/>
-              <EraseCursor active={ctx?.activeTool === 'erase'} />
             </main>
           </div>
           <Legend resolveLegendUrl={resolveLegendUrl} />
