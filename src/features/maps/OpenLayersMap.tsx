@@ -6,12 +6,11 @@ import View from "ol/View";
 import { Select } from "ol/interaction";
 import { ScaleLine, defaults as defaultControls } from "ol/control";
 import BaseLayerSwitcher from '../layers/BaseLayerSwitcher';
-
+import { buildImageLayerSet} from '../../features/layers/ImageLayerComponent';
 import { useState } from "react";
 import MapInteractions from './MapInteractions';
 import MapContext from "../../context/MapContext";
 import BaseLayersComponent from "../layers/BaseLayersComponent";
-import ImageLayerComponents from "../layers/ImageLayerComponent";
 import VectorLayersComponent from "../layers/VectorLayersComponent";
 import VectorLayer from "ol/layer/Vector";
 import FeaturePopup from "./interactions/FeaturePopup";
@@ -48,7 +47,7 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
   const mapInstanceRef = useRef<Map | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
   const [selectedCoordinate, setSelectedCoordinate] = useState<any>(null);
-  const imageLayers = imageLayerGroup ?? ImageLayerComponents()
+  const imageLayers: LayerGroup = imageLayerGroup ?? buildImageLayerSet().layerGroup;
 
 
   const ctx = useContext(MapContext);

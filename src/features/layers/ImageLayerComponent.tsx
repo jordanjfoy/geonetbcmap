@@ -2,70 +2,35 @@ import ImageLayer from 'ol/layer/Image';
 import LayerGroup from 'ol/layer/Group';
 import { ImageWMS } from 'ol/source';
 
-// Survey Monuments - Network Class 
-
-// ACtive Control Point 
-// Canadian Base 
-// High Precision Network 
-// Non - HPC Integrated 
-// Other GCM 
-// First Order Levelling 
-// Other Benchmark 
-// Destroyed GCM 
-
-
-// Survey Monuments - Monument Status
-
-// Published GCM - GPS or GPS + Terrestrial (diamond)
-// Rural: 1892
-// Urban: 1895
-
-// Published GCM - Terrestrial (blue triangle)
-// Rural: 1891
-// Urban: 1894
-
-// Published Federal Benchmarks (red square)
-// Rural: 4159
-// Urban: 4163
-
-// Published BC Benchmarks (red border square)
-// Rural: 4160
-// Urban: 4164
-
-// Non-Published GCM (Low Horizontal Accuracy) (purple triangle)
-// Rural: 4161
-// Urban: 4165
-
-// Non-Published GCM (Preliminary) (blue circle)
-// Rural: 4162
-// Urban: 4166
-
-// Destroyed GCM
-// Rural: 1893
-// Urban: 1896
-
 export type LegendEntry = { label: string; url: string };
 
-export function buildImageLayerSet() {
+export type ImageLayerSet = {
+  layerGroup: LayerGroup;
+  resolveLegendUrl: (resolution?: number) => LegendEntry[];
+};
+
+export function buildImageLayerSet(): ImageLayerSet {
   const monumentUrl =
     'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL/ows';
+  const networkUrl =
+    'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows';
 
-  // Per-style bookkeeping, keyed the same way throughout.
   const monumentSources: Record<string, ImageWMS> = {};
   const monumentStyles: Record<string, string> = {};
-  const monumentLabels: Record<string, string> = {}; // only set for the "representative" style in each group
+  const monumentLabels: Record<string, string> = {};
   const monumentLayers: Record<string, ImageLayer<ImageWMS>> = {};
-  const monumentGroups: Record<string, LayerGroup> = {}; // parent group for visibility checks
 
-  const buildMonumentLayer = (
+  const createLayer = (
+    baseUrl: string,
+    layerName: string,
     key: string,
     styleId: string,
-    legendLabel?: string
+    legendLabel: string
   ) => {
     const source = new ImageWMS({
-      url: monumentUrl,
+      url: baseUrl,
       params: {
-        LAYERS: 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL',
+        LAYERS: layerName,
         VERSION: '1.3.0',
         FORMAT: 'image/png',
         STYLES: styleId,
@@ -73,162 +38,82 @@ export function buildImageLayerSet() {
       projection: '4326',
     });
 
-    const layer = new ImageLayer({ source });
+    const layer = new ImageLayer({
+      source,
+      properties: { name: legendLabel, title: legendLabel },
+    });
 
     monumentSources[key] = source;
     monumentStyles[key] = styleId;
     monumentLayers[key] = layer;
-
-    if (legendLabel) {
-      monumentLabels[key] = legendLabel;
-    }
+    monumentLabels[key] = legendLabel;
 
     return layer;
   };
 
-  // Published GCM - GPS or GPS + Terrestrial (diamond)
-  const gpsGroup = new LayerGroup({
-    properties: { name: 'Published GCM - GPS' },
+  // Monument Status Master Group (10502 - 10508)
+  const monumentStatusMasterGroup = new LayerGroup({
+    properties: { name: 'Monument Status', title: 'Monument Status' },
     layers: [
-      buildMonumentLayer('gpsRural', '1892', 'Published GCM - GPS'),
-      buildMonumentLayer('gpsUrban', '1895'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'terrestrial', '10503', 'Published GCM - Terrestrial Only'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'gps', '10502', 'Published GCM - GPS or GPS and Terrestrial'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'federal', '10504', 'Published Federal Benchmarks Except GPS'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'provincial', '10505', 'Published Provincial Benchmarks Except GPS'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'lowAccuracy', '10506', 'Non Published GCM Low Horizontal Accuracy'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'preliminary', '10507', 'Non Published GCM Preliminary'),
+      createLayer(monumentUrl, 'pub:WHSE_REFERENCE.MASCOT_GEODETIC_CONTROL', 'destroyedStatus', '10508', 'Destroyed GCM (Monument Status)'),
     ],
   });
 
-  // Published GCM - Terrestrial (blue triangle)
-  const terrestrialGroup = new LayerGroup({
-    properties: { name: 'Published GCM - Terrestrial' },
+  // Network Class Master Group (10509 - 10516)
+  const networkClassMasterGroup = new LayerGroup({
+    properties: { name: 'Network Class', title: 'Network Class' },
     layers: [
-      buildMonumentLayer('terrestrialRural', '1891', 'Published GCM - Terrestrial'),
-      buildMonumentLayer('terrestrialUrban', '1894'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'activeControl', '10509', 'Active Control Point'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'canadianBase', '10510', 'Canadian Base Network'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'highPrecision', '10511', 'High Precision Network'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'nonHpn', '10512', 'Non HPN Integrated Survey Area'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'otherGcm', '10513', 'Other GCM'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'firstOrderLevelling', '10514', 'First Order Levelling'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'otherBenchmark', '10515', 'Other Benchmark'),
+      createLayer(networkUrl, 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP', 'destroyedNetwork', '10516', 'Destroyed GCM (Network Class)'),
     ],
   });
 
-  // Published Federal Benchmarks (red square)
-  const federalBenchmarksGroup = new LayerGroup({
-    properties: { name: 'Published Federal Benchmark' },
-    layers: [
-      buildMonumentLayer('federalRural', '4159', 'Published Federal Benchmark'),
-      buildMonumentLayer('federalUrban', '4163'),
-    ],
-  });
-
-  // Published BC Benchmarks (red border square)
-  const provincialBenchmarksGroup = new LayerGroup({
-    properties: { name: 'Published BC Benchmark' },
-    layers: [
-      buildMonumentLayer('provincialRural', '4160', 'Published BC Benchmark'),
-      buildMonumentLayer('provincialUrban', '4164'),
-    ],
-  });
-
-  // Non-Published GCM (Low Horizontal Accuracy) (purple triangle)
-  const lowAccuracyGroup = new LayerGroup({
-    properties: { name: 'Non-Published GCM - Low Accuracy' },
-    layers: [
-      buildMonumentLayer('lowAccuracyRural', '4161', 'Non-Published GCM - Low Accuracy'),
-      buildMonumentLayer('lowAccuracyUrban', '4165'),
-    ],
-  });
-
-  // Non-Published GCM (Preliminary) (blue circle)
-  const preliminaryGroup = new LayerGroup({
-    properties: { name: 'Non-Published GCM - Preliminary' },
-    layers: [
-      buildMonumentLayer('preliminaryRural', '4162', 'Non-Published GCM - Preliminary'),
-      buildMonumentLayer('preliminaryUrban', '4166'),
-    ],
-  });
-
-  // Destroyed GCM
-  const destroyedGroup = new LayerGroup({
-    properties: { name: 'Destroyed GCM' },
-    layers: [
-      buildMonumentLayer('destroyedRural', '1893', 'Destroyed GCM'),
-      buildMonumentLayer('destroyedUrban', '1896'),
-    ],
-  });
-
-  // Map each representative key to its parent group, for visibility checks.
-  monumentGroups['gpsRural'] = gpsGroup;
-  monumentGroups['terrestrialRural'] = terrestrialGroup;
-  monumentGroups['federalRural'] = federalBenchmarksGroup;
-  monumentGroups['provincialRural'] = provincialBenchmarksGroup;
-  monumentGroups['lowAccuracyRural'] = lowAccuracyGroup;
-  monumentGroups['preliminaryRural'] = preliminaryGroup;
-  monumentGroups['destroyedRural'] = destroyedGroup;
-
-  // Leave networkClassSource as-is
-  const networkClassSource = new ImageWMS({
-    url: 'https://openmaps.gov.bc.ca/geo/pub/WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP/ows',
-    params: {
-      LAYERS: 'pub:WHSE_REFERENCE.SRV_GEODETIC_CONTROL_HP_PUB_SP',
-      VERSION: '1.3.0',
-      FORMAT: 'image/png',
-      STYLES: '10519',
-    },
-    projection: '4326',
-  });
-
-  const networkClassLayer = new ImageLayer({ 
-    source: networkClassSource,  
-    properties: { name: 'Network Class' },
-  });
-
+  // Root Layer Group
   const superLayerGroup = new LayerGroup({
-    layers: [
-      terrestrialGroup,
-      gpsGroup,
-      federalBenchmarksGroup,
-      provincialBenchmarksGroup,
-      lowAccuracyGroup,
-      preliminaryGroup,
-      destroyedGroup,
-      networkClassLayer,
-    ],
+    properties: { name: 'Geodetic Control', title: 'Geodetic Control' },
+    layers: [monumentStatusMasterGroup, networkClassMasterGroup],
   });
 
-  // A monument style counts as "visible" only if both its own layer
-  // AND its parent group are visible.
-  const isMonumentVisible = (key: string) => {
-    const layer = monumentLayers[key];
-    const group = monumentGroups[key];
-    if (!layer || !layer.getVisible()) return false;
-    if (group && !group.getVisible()) return false;
-    return true;
-  };
-
-  const resolveLegendUrl = (resolution: number): LegendEntry[] => {
+  /**
+   * Always resolves legend graphic URLs regardless of scale
+   */
+  const resolveLegendUrl = (_resolution?: number): LegendEntry[] => {
     const entries: LegendEntry[] = [];
 
     for (const key of Object.keys(monumentLabels)) {
-      if (!isMonumentVisible(key)) continue;
+      const layer = monumentLayers[key];
+      if (!layer || !layer.getVisible()) continue;
 
-      const url = monumentSources[key].getLegendUrl(resolution, {
+      const url = monumentSources[key].getLegendUrl(undefined, {
         STYLE: monumentStyles[key],
         WIDTH: 20,
         HEIGHT: 20,
+        LEGEND_OPTIONS: 'forceRule:true',
       });
 
       if (url) entries.push({ label: monumentLabels[key], url });
     }
 
-    if (networkClassLayer.getVisible()) {
-      const networkUrl = networkClassSource.getLegendUrl(resolution, {
-        STYLE: '10519',
-      });
-      if (networkUrl) entries.push({ label: 'Network Class', url: networkUrl });
-    }
-
     return entries;
   };
+
+  // Store function directly inside OpenLayers custom properties
+  superLayerGroup.set('resolveLegendUrl', resolveLegendUrl);
 
   return {
     layerGroup: superLayerGroup,
     resolveLegendUrl,
   };
-}
-
-export default function ImageLayersComponent() {
-  return buildImageLayerSet().layerGroup;
 }
