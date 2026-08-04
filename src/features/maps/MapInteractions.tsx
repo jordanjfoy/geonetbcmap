@@ -3,6 +3,7 @@ import ModifyInteraction from './interactions/ModifyInteraction';
 import SelectBoxInteraction from './interactions/SelectBoxInteraction';
 import ClearInteraction from './interactions/ClearInteraction';
 import EraseInteraction from './interactions/EraseInteraction';
+import MeasureInteraction from './interactions/MeasureInteraction';
 
 export default function MapInteractions() {
   return (
@@ -12,6 +13,7 @@ export default function MapInteractions() {
       <SelectBoxInteraction />
       <ClearInteraction />
       <EraseInteraction /> 
+      <MeasureInteraction />
     </>
   );
 }

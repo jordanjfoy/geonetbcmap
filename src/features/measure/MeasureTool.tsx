@@ -4,13 +4,16 @@ import MapContext from "../../context/MapContext";
 //establish types 
 type MeasureDropdownProps = {
   onSelect?: (type: string) => void;
-  drawTypes?: string[];
+  measureTypes?: string[];
 };
+
+//establishing variables to help us - this will calculate polygon area and line length :D 
+
 
 
 export const MeasureDropdown = ({ 
   onSelect, 
-  drawTypes = ['Length (LineString)', 'Area (Polygon)'] 
+  measureTypes = ['Length (m)', 'Area (m2)'] 
 }: MeasureDropdownProps) => {
   const [showMenu, setShowMenu] = useState(false);
   //Wire this into the map through map context so tha
@@ -18,7 +21,7 @@ export const MeasureDropdown = ({
   
   const { setActiveTool, setMeasureType } = mapCtx || {};
 
-  const handleDrawTypeClick = (type: string) => {
+  const handleMeasureTypeClick = (type: string) => {
     setActiveTool?.('measure');
     setMeasureType?.(type);
     onSelect?.(type);
@@ -45,10 +48,10 @@ export const MeasureDropdown = ({
           zIndex: 1000,
           minWidth: '150px'
         }}>
-          {drawTypes.map(type => (
+          {measureTypes.map(type => (
             <button
               key={type}
-              onClick={() => handleDrawTypeClick(type)}
+              onClick={() => handleMeasureTypeClick(type)}
               style={{
                 display: 'block',
                 width: '100%',

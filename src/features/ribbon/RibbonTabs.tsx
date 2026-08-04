@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { UIContext } from "../../context/UIContext";
 import MapContext from "../../context/MapContext";
 import { DrawDropdown } from "../drawing/DrawDropdown";
+import { MeasureDropdown } from "../measure/MeasureTool";
 
 export default function RibbonTabs() {
   const [tab, setTab] = useState("Navigation");
@@ -75,6 +76,7 @@ export default function RibbonTabs() {
             <button className="ribbon-button" onClick={() => {setAction("Select"); mapCtx?.setActiveTool("select")}}>Select</button>
             <button className="ribbon-button" onClick={() => setAction("Freehand")}>Search</button>
             <button className="ribbon-button" onClick={() => setAction("Distance")}>Search</button>
+            <MeasureDropdown onSelect={(type) => setAction(`Measure: ${type}`)} />
           </div>
         )}
 
