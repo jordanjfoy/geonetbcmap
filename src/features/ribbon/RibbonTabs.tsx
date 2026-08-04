@@ -38,7 +38,7 @@ export default function RibbonTabs() {
 
         {tab === "Navigation" && (
           <div className="ribbon-group">
-            <button onClick={() => mapCtx?.setExtent([-15470000, 6110000, -12690000, 8400000])}>Full Extent</button>
+            <button className="ribbon-button" onClick={() => mapCtx?.setExtent([-15470000, 6110000, -12690000, 8400000])}>Full Extent</button>
             <button onClick={() => mapCtx?.zoomIn()}>Zoom In</button>
             <button onClick={() => mapCtx?.zoomOut()}>Zoom Out</button>
             {/* Removed button for now <button onClick={() => mapCtx?.pan()}>Pan</button> */}

@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Overlay from 'ol/Overlay';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, transform } from 'ol/proj';
 import MapContext from '../../context/MapContext';
+
+type CoordType = 'latlon' | 'utm7n' | 'utm8n' | 'utm9n' | 'utm10n' | 'utm11n';
 
 export default function GoToPoint() {
   const context = useContext(MapContext);
@@ -10,8 +12,9 @@ export default function GoToPoint() {
   const popupRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<Overlay | null>(null);
 
-  const [lat, setLat] = useState<string>('');
-  const [lon, setLon] = useState<string>('');
+  const [coordType, setCoordType] = useState<CoordType>('latlon');
+  const [val1, setVal1] = useState<string>('');
+  const [val2, setVal2] = useState<string>('');
   const [tooltipText, setTooltipText] = useState<string>('');
 
   useEffect(() => {
@@ -22,6 +25,7 @@ export default function GoToPoint() {
       offset: [0, -15],
       positioning: 'bottom-center',
       className: 'ol-tooltip-measure ol-tooltip ol-tooltip-static',
+      stopEvent: true,
     });
 
     map.addOverlay(overlay);
@@ -36,13 +40,34 @@ export default function GoToPoint() {
     e.preventDefault();
     if (!map || !overlayRef.current) return;
 
-    const parsedLat = parseFloat(lat);
-    const parsedLon = parseFloat(lon);
+    const num1 = parseFloat(val1);
+    const num2 = parseFloat(val2);
 
-    if (isNaN(parsedLat) || isNaN(parsedLon)) return;
+    if (isNaN(num1) || isNaN(num2)) return;
 
-    // OpenLayers uses [Longitude, Latitude] order
-    const projectedCoords = fromLonLat([parsedLon, parsedLat]);
+    let projectedCoords: number[] = [];
+    let displayInfo = '';
+
+    if (coordType === 'latlon') {
+      projectedCoords = fromLonLat([num2, num1]);
+      displayInfo = `<b>Lat:</b> ${num1}<br/><b>Lon:</b> ${num2}`;
+    } else if (coordType === 'utm7n') {
+      projectedCoords = transform([num1, num2], 'EPSG:32607', map.getView().getProjection());
+      displayInfo = `<b>Easting:</b> ${num1}<br/><b>Northing:</b> ${num2}`;
+    } else if (coordType === 'utm8n') {
+      projectedCoords = transform([num1, num2], 'EPSG:32608', map.getView().getProjection());
+      displayInfo = `<b>Easting:</b> ${num1}<br/><b>Northing:</b> ${num2}`;
+    } else if (coordType === 'utm9n') {
+      projectedCoords = transform([num1, num2], 'EPSG:32609', map.getView().getProjection());
+      displayInfo = `<b>Easting:</b> ${num1}<br/><b>Northing:</b> ${num2}`;
+    } else if (coordType === 'utm10n') {
+      projectedCoords = transform([num1, num2], 'EPSG:32610', map.getView().getProjection());
+      displayInfo = `<b>Easting:</b> ${num1}<br/><b>Northing:</b> ${num2}`;
+    } else if (coordType === 'utm11n') {
+      projectedCoords = transform([num1, num2], 'EPSG:32611', map.getView().getProjection());
+      displayInfo = `<b>Easting:</b> ${num1}<br/><b>Northing:</b> ${num2}`;
+    } 
+
 
     map.getView().animate({
       center: projectedCoords,
@@ -50,54 +75,71 @@ export default function GoToPoint() {
       duration: 500,
     });
 
-    setTooltipText(`Lat: ${parsedLat}<br/> Lon: ${parsedLon}`);
+    setTooltipText(displayInfo);
     overlayRef.current.setPosition(projectedCoords);
   };
-
+  
+  const handleDismissPopup = () => {
+    // 1. Tell OpenLayers to hide the overlay on the map
+    if (overlayRef.current) {
+      overlayRef.current.setPosition(undefined);
+    }
+    // 2. Clear the tooltip content in React state
+    setTooltipText('');
+  };
   return (
-    // Changed 'left: 20' to 'right: 20' to anchor it to the top-right corner
-    <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 10 }}>
-      {/* Search Input Form */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          background: '#fff',
-          padding: '12px',
-          borderRadius: '6px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          display: 'flex',
-          gap: '8px',
-        }}
-      >
-        <input
-          type="number"
-          step="any"
-          placeholder="Latitude"
-          value={lat}
-          onChange={(e) => setLat(e.target.value)}
-        />
-        <input
-          type="number"
-          step="any"
-          placeholder="Longitude"
-          value={lon}
-          onChange={(e) => setLon(e.target.value)}
-        />
-        <button type="submit">Go to Point</button>
-      </form>
+    <>
+      {/* 1. Fixed Floating Panel */}
+      <div className="goto-panel">
+        <form onSubmit={handleSubmit} className="goto-form">
+          <div className="goto-field-group">
+            <label className="goto-label">Format:</label>
+            <select
+              value={coordType}
+              onChange={(e) => setCoordType(e.target.value as CoordType)}
+              className="goto-select"
+            >
+              <option value="latlon">Lat / Long (WGS 84)</option>
+              <option value="utm7n">UTM Zone 7N</option>
+              <option value="utm8n">UTM Zone 8N</option>
+              <option value="utm9n">UTM Zone 9N</option>
+              <option value="utm10n">UTM Zone 10N</option>
+              <option value="utm11n">UTM Zone 11N</option>
+            </select>
+          </div>
 
-      {/* The floating tooltip map overlay element */}
+          <div className="goto-field-group">
+            <input
+              type="number"
+              step="any"
+              placeholder={coordType === 'latlon' ? 'Latitude' : 'Easting'}
+              value={val1}
+              onChange={(e) => setVal1(e.target.value)}
+              className="goto-input"
+            />
+            <input
+              type="number"
+              step="any"
+              placeholder={coordType === 'latlon' ? 'Longitude' : 'Northing'}
+              value={val2}
+              onChange={(e) => setVal2(e.target.value)}
+              className="goto-input"
+            />
+            <button type="submit" className="goto-button">
+              Go
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* 2. Map Popup Overlay */}
       <div
         ref={popupRef}
-        style={{
-          backgroundColor: '#fff',
-          padding: '4px 8px',
-          borderRadius: '4px',
-          border: '1px solid #ccc',
-          fontSize: '12px',
-        }}
+        className="goto-tooltip"
+        onClick={handleDismissPopup} // <-- Add click handler here
+        style={{ cursor: 'pointer' }} // Visual hint that it's clickable
         dangerouslySetInnerHTML={{ __html: tooltipText }}
       />
-    </div>
+    </>
   );
 }
