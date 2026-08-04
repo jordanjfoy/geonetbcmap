@@ -9,6 +9,7 @@ export function MapProvider({ children }: { children: ReactNode }) {
   const [mapInstance, setMapInstance] = useState<Map | null>(null);
   const [drawType, setDrawType] = useState<string | null>(null);
   const [overlayElement, setOverlayElement] = useState<HTMLElement | null>(null);
+  const [MeasureType, setMeasureType] = useState<string | null>(null);
 
   const baseLayersRef = useRef<LayerGroup | null>(null);
 
@@ -113,6 +114,8 @@ export function MapProvider({ children }: { children: ReactNode }) {
         previousExtent,
         nextExtent,
         imageLayersRef,
+        MeasureType,
+        setMeasureType
       }}
     >
       {children}

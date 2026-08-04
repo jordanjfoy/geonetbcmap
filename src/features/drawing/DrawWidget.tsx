@@ -1,14 +1,16 @@
 
-import { useContext } from 'react';
-import MapContext from '../../context/MapContext';
+// //This MIGHT NEED to be DELETED :D
 
-export default function DrawWidget() {
-  const ctx = useContext(MapContext);
+// import { useContext } from 'react';
+// import MapContext from '../../context/MapContext';
 
-  if (!ctx) return null;
+// export default function DrawWidget() {
+//   const ctx = useContext(MapContext);
 
-  return (
-    <button onClick={() => ctx.setActiveTool('draw')}>
-      Draw
-    </button>
-  )}
+//   if (!ctx) return null;
+
+//   return (
+//     <button onClick={() => ctx.setActiveTool('draw')}>
+//       Draw
+//     </button>
+//   )}

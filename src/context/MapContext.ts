@@ -23,6 +23,8 @@ type MapContextType = {
   previousExtent: () => void;
   nextExtent: () => void;
   imageLayersRef: React.RefObject<LayerGroup | null>;
+  MeasureType: string | null;
+  setMeasureType: (type: string | null) => void;
   
 
 };
