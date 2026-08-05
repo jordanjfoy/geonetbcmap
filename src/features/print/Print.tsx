@@ -38,65 +38,86 @@ export const Print = () => {
     } as const;
 
     useEffect(() => {
-        const exportButton = exportButtonRef.current;
-        if (!exportButton || !ctx?.map) return;
+            const exportButton = exportButtonRef.current;
+            if (!exportButton || !ctx?.map) return;
 
-        const handleClick = () => {
-            exportButton.disabled = true;
-            document.body.style.cursor = 'progress';
+            const handleClick = () => {
+                const format = formatRef.current?.value as keyof typeof dims;
+                const resolution = resolutionRef.current?.value;
+                const scale = scaleRef.current?.value;
 
-            if (!ctx || ctx.activeTool !== 'measure' || !ctx.MeasureType || !ctx.map) return;
+                if (!format || !resolution || !scale) return;
 
-            const format = formatRef.current?.value as keyof typeof dims;
-            const resolution = resolutionRef.current?.value;
-            const scale = scaleRef.current?.value;
+                exportButton.disabled = true;
+                document.body.style.cursor = 'progress';
 
-            if (!format || !resolution || !scale) return;
+                const dim = dims[format];
+                const width = Math.round((dim[0] * Number(resolution)) / 25.4);
+                const height = Math.round((dim[1] * Number(resolution)) / 25.4);
+                const viewResolution = ctx.map!.getView().getResolution();
+                const scaleResolution =
+                    Number(scale) /
+                    getPointResolution(
+                        ctx.map!.getView().getProjection()!,
+                        Number(resolution) / 25.4,
+                        ctx.map!.getView().getCenter()!,
+                    );
 
-            const dim = dims[format];
-            const width = Math.round((dim[0] * Number(resolution)) / 25.4);
-            const height = Math.round((dim[1] * Number(resolution)) / 25.4);
-            const viewResolution = ctx.map.getView().getResolution();
-            const scaleResolution =
-                Number(scale) /
-                getPointResolution(
-                    ctx.map.getView().getProjection()!,
-                    Number(resolution) / 25.4,
-                    ctx.map.getView().getCenter()!,
-                );
+                ctx.map!.once('rendercomplete', function () {
+                    // 1. Create temporary canvas
+                    const mapCanvas = document.createElement('canvas');
+                    mapCanvas.width = width;
+                    mapCanvas.height = height;
+                    const mapContext = mapCanvas.getContext('2d');
 
-            ctx.map.once('rendercomplete', function () {
-                exportOptions.width = width;
-                exportOptions.height = height;
+                    // 2. Composite layers
+                    const canvases = ctx.map!.getTargetElement().querySelectorAll('.ol-layer canvas');
+                    Array.from(canvases).forEach((canvas) => {
+                        const htmlCanvas = canvas as HTMLCanvasElement;
+                        if (htmlCanvas.width > 0 && mapContext) {
+                            const opacity = (htmlCanvas.parentNode as HTMLElement).style.opacity;
+                            mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+                            mapContext.drawImage(htmlCanvas, 0, 0);
+                        }
+                    });
 
-                html2canvas(ctx.map!.getViewport(), exportOptions).then(function (canvas) {
-                    const pdf = new jsPDF('landscape', undefined, format);
-                    pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, dim[0], dim[1]);
-                    pdf.save('map.pdf');
+                    // 4. Reset Map State
+                        ctx.scaleLineRef.current?.setDpi(undefined);
+                        
+                        // Clear inline width/height to let CSS take back control
+                        const targetEl = ctx.map!.getTargetElement();
+                        targetEl.style.width = '';
+                        targetEl.style.height = '';
 
-                    ctx.scaleLineRef.current?.setDpi(undefined);
-                    ctx.map!.getTargetElement().style.width = '';
-                    ctx.map!.getTargetElement().style.height = '';
-                    ctx.map!.updateSize();
-                    ctx.map!.getView().setResolution(viewResolution);
-                    exportButton.disabled = false;
-                    document.body.style.cursor = 'auto';
+                        // Tell OpenLayers the container size changed back to normal screen size
+                        ctx.map!.updateSize();
+                        
+                        // Restore original zoom/resolution
+                        ctx.map!.getView().setResolution(viewResolution);
+
+                        // FORCE OpenLayers to redraw the screen map immediately
+                        ctx.map!.renderSync(); 
+
+                        exportButton.disabled = false;
+                        document.body.style.cursor = 'auto';
                 });
-            });
 
-            ctx.scaleLineRef.current?.setDpi(Number(resolution));
-            ctx.map.getTargetElement().style.width = width + 'px';
-            ctx.map.getTargetElement().style.height = height + 'px';
-            ctx.map.updateSize();
-            ctx.map.getView().setResolution(scaleResolution);
-        };
+                // Trigger re-render to start the export cycle:
+                ctx.scaleLineRef.current?.setDpi(Number(resolution));
+                ctx.map!.getTargetElement().style.width = width + 'px';
+                ctx.map!.getTargetElement().style.height = height + 'px';
+                ctx.map!.updateSize();
+                ctx.map!.getView().setResolution(scaleResolution);
+                ctx.map!.renderSync();
+            }; // 👈 handleClick ends here!
 
-        exportButton.addEventListener('click', handleClick);
+            // Attach listener here (outside handleClick):
+            exportButton.addEventListener('click', handleClick);
 
-        return () => {
-            exportButton.removeEventListener('click', handleClick);
-        };
-    }, [ctx]);
+            return () => {
+                exportButton.removeEventListener('click', handleClick);
+            };
+        }, [ctx]);
 
     return (
         <div className="print-container">

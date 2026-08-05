@@ -36,6 +36,7 @@ export function buildImageLayerSet(): ImageLayerSet {
         STYLES: styleId,
       },
       projection: '4326',
+      crossOrigin: 'anonymous',
     });
 
     const layer = new ImageLayer({
@@ -84,6 +85,7 @@ export function buildImageLayerSet(): ImageLayerSet {
   const superLayerGroup = new LayerGroup({
     properties: { name: 'Geodetic Control', title: 'Geodetic Control' },
     layers: [monumentStatusMasterGroup, networkClassMasterGroup],
+    
   });
 
   /**

@@ -34,7 +34,9 @@ export default function BaseLayersComponent(): LayerGroup {
     const baseLayers = new LayerGroup({
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new OSM({
+            crossOrigin: 'anonymous'
+          }),
           visible: true, // ✅ default base layer
           properties: { name: 'OSM' }
         }),
@@ -46,7 +48,8 @@ export default function BaseLayersComponent(): LayerGroup {
           properties: { name: 'Imagery' },
           source: new XYZ({
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            maxZoom: 19
+            maxZoom: 19,
+            crossOrigin: 'anonymous'
           })
         })
         

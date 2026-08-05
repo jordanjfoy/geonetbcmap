@@ -51,6 +51,13 @@ export default function RibbonTabs() {
               }}>
               Layers
             </button>
+            <button onClick={() => { 
+              {setAction("Print")};  
+              {setSidebarMode("Print")}
+              }}>
+              Print
+            </button>
+            
 
           </div>
         )}

@@ -2,7 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { UIContext } from "../context/UIContext";
 import { WfsQuery } from "../features/query/FeatureForm";
-import LayerControl from '../features/layers/LayerControl'; 
+import LayerControl from '../features/layers/LayerControl';
+import { Print } from '../features/print/Print'; 
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -56,6 +57,7 @@ export default function Sidebar() {
       <div className="sidebar-content">
         {normalizedMode === "layers" && <LayerControl />}
         {normalizedMode === "form" && <WfsQuery />}
+        {normalizedMode === "print" && <Print />}
       </div>
     </aside>
   );
