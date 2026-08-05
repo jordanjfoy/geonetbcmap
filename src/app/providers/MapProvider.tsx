@@ -3,6 +3,7 @@ import Map from 'ol/Map';
 import LayerGroup from 'ol/layer/Group';
 import MapContext from '../../context/MapContext';
 import { buildImageLayerSet } from '../../features/layers/ImageLayerComponent';
+import ScaleControl from 'ol/control/ScaleLine';
 
 export function MapProvider({ children }: { children: ReactNode }) {
   const [activeTool, setActiveTool] = useState<string | null>(null);
@@ -115,7 +116,8 @@ export function MapProvider({ children }: { children: ReactNode }) {
         nextExtent,
         imageLayersRef,
         MeasureType,
-        setMeasureType
+        setMeasureType,
+        scaleLineRef: useRef<ScaleControl | null>(null), // Add scaleLineRef to the context
       }}
     >
       {children}

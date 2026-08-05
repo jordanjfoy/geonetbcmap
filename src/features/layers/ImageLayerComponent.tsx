@@ -99,8 +99,7 @@ export function buildImageLayerSet(): ImageLayerSet {
       const url = monumentSources[key].getLegendUrl(undefined, {
         STYLE: monumentStyles[key],
         WIDTH: 20,
-        HEIGHT: 20,
-        LEGEND_OPTIONS: 'forceRule:true',
+        HEIGHT: 20
       });
 
       if (url) entries.push({ label: monumentLabels[key], url });

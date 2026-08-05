@@ -52,7 +52,7 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
 
   const ctx = useContext(MapContext);
   if (!ctx) return null;
-  const { baseLayersRef, setMapInstance, imageLayersRef } = ctx;
+  const { baseLayersRef, setMapInstance, imageLayersRef, scaleLineRef } = ctx;
 
   useEffect(() => {
     if (!mapDivRef.current) return;
@@ -63,8 +63,10 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
       steps: 4,
       text: true,
       minWidth: 140,
+      
     });
 
+    scaleLineRef.current = ScaleControl
     const baseLayers = BaseLayersComponent();
     const overlays = VectorLayersComponent();
     const vectors = flattenVectorLayers(overlays);
@@ -129,9 +131,8 @@ export default function OpenLayersMap({imageLayerGroup}: OpenLayersMapProps) {
     setMapInstance(map);
     baseLayersRef.current = baseLayers;
     imageLayersRef.current = imageLayers;
+    
 
-    
-    
     const select = new Select({
       layers: vectors,
       hitTolerance: 5,

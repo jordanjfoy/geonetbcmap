@@ -2,6 +2,7 @@
 import { createContext } from 'react';
 import Map from 'ol/Map';
 import LayerGroup from 'ol/layer/Group';
+import ScaleControl from 'ol/control/ScaleLine';
 
 // 1. Define the shape of the context (what you are sharing)
 type MapContextType = {
@@ -25,6 +26,7 @@ type MapContextType = {
   imageLayersRef: React.RefObject<LayerGroup | null>;
   MeasureType: string | null;
   setMeasureType: (type: string | null) => void;
+  scaleLineRef: React.RefObject<ScaleControl | null>;
   
 
 };
