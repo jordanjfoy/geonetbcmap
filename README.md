@@ -7,7 +7,7 @@ This repository contains a project to replace the current MASCOT Map created by 
 >THIS IS A WORK IN PROGRESS - SUBJECT TO CHANGE
 >
 
-
+```
 geonetbcmap/
 ├── LICENSE
 ├── package.json
@@ -78,7 +78,7 @@ geonetbcmap/
 │   └── styles/
 │       ├── index.scss
 │       └── styles.ts
-
+```
 
 ## Set Up  
 ### WIP 
