@@ -86,7 +86,7 @@ Note - it is recommended to have some sort of development environment like wsl t
 
 1. Install wsl 
 2. Clone the repository 
-   >[! ]
+   >[ ]
    >```git 
    >git clone https://github.com/jordanjfoy/geonetbcmap.git   
 
