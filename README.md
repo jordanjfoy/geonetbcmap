@@ -115,9 +115,11 @@ Additional documentation can be found in the docs folder.
 This material is designed to go through step by step, and provides sign much more in depth guidance on how this project was created.
 
 The docs folder includes 
+```
 docs/
 ├── 1. Technology Stack 
 ├── 2. Data Flow 
 ├── 3. Potential Troubleshooting Issues 
 ├── 4. Example Addition 
-└── 5. Appendix 
+└── 5. Appendix
+```
